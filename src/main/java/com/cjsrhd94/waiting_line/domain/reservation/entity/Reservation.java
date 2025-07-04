@@ -1,23 +1,20 @@
 package com.cjsrhd94.waiting_line.domain.reservation.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "reservations")
 public class Reservation {
     @Id
-    @UuidGenerator
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "spot_id", nullable = false)
     private Long spotId;
@@ -28,6 +25,7 @@ public class Reservation {
     @Column(name = "head_count", nullable = false)
     private Integer headCount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private ReservationStatus status;
 
@@ -42,7 +40,6 @@ public class Reservation {
         validatePhoneNumber(phoneNumber);
         isOverHeadCount(headCount);
 
-        this.id = UUID.randomUUID();
         this.spotId = spotId;
         this.phoneNumber = phoneNumber;
         this.headCount = headCount;

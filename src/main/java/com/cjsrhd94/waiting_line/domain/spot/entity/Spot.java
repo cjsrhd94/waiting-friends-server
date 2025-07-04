@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "spots")
 public class Spot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
