@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: waiting-line
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/waiting-line;MODE=mysql;
+    username: sa
+    password:
