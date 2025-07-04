@@ -39,6 +39,7 @@ public class Reservation {
             String phoneNumber,
             Integer headCount
     ) {
+        validatePhoneNumber(phoneNumber);
         isOverHeadCount(headCount);
 
         this.id = UUID.randomUUID();
@@ -54,6 +55,15 @@ public class Reservation {
         CALLING, // 호출 중
         COMPLETED, // 입장 완료
         CANCELLED // 취소됨
+    }
+
+    private void validatePhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isBlank()) {
+            throw new IllegalArgumentException("전화번호는 필수 입력 사항입니다.");
+        }
+        if (!phoneNumber.matches("^0\\d{1,2}-\\d{3,4}-\\d{4}$")) {
+            throw new IllegalArgumentException("전화번호는 10자리 또는 11자리 숫자여야 합니다.");
+        }
     }
 
     private void isOverHeadCount(Integer headCount) {
