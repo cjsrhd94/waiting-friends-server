@@ -32,6 +32,11 @@ dependencies {
 	// prod db
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// redis
+	implementation 'org.redisson:redisson-spring-boot-starter:3.50.0'
+
+	// log
+
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

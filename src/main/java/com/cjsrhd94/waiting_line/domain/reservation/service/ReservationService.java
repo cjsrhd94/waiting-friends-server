@@ -3,6 +3,7 @@ package com.cjsrhd94.waiting_line.domain.reservation.service;
 import com.cjsrhd94.waiting_line.domain.reservation.entity.Reservation;
 import com.cjsrhd94.waiting_line.domain.reservation.repository.ReservationRepository;
 import com.cjsrhd94.waiting_line.domain.spot.repository.reader.SpotReader;
+import com.cjsrhd94.waiting_line.global.annotation.DistributedLock;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ public class ReservationService {
     private final SpotReader spotReader;
 
     @Transactional
+    @DistributedLock(key = "#spotId")
     public Long reserve(
             Long spotId,
             String phoneNumber,

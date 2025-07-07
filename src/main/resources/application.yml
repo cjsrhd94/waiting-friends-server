@@ -8,6 +8,11 @@ spring:
     username: sa
     password:
 
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties:
@@ -16,4 +21,4 @@ spring:
         format_sql: true
         show_sql: true
         hbm2ddl:
-          auto: create
+          auto: update
