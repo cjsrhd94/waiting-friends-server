@@ -3,16 +3,18 @@ package com.example.waitingreservationservice.controller;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
+
+    @GetMapping("/health")
+    public String healthCheck() {
+        return "Reservation Service is running";
+    }
 
     @PostMapping
     public Long reserve(@RequestBody ReservationCreateRequest request) {
