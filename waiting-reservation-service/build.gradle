@@ -18,6 +18,23 @@ repositories {
 }
 
 dependencies {
+	// spring
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// spring cloud
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.3.0'
+
+	// lombok
+	implementation 'org.projectlombok:lombok'
+	annotationProcessor('org.projectlombok:lombok')
+
+	// local db
+	runtimeOnly("com.h2database:h2:2.2.224")
+
+	// redis
+	implementation 'org.redisson:redisson-spring-boot-starter:3.50.0'
+
 	implementation 'org.springframework.boot:spring-boot-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
