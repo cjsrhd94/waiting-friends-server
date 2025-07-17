@@ -1,17 +1,27 @@
 package com.example.waitingspotservice.controller;
 
+import com.example.waitingspotservice.dto.request.SpotCreateRequest;
+import com.example.waitingspotservice.service.SpotService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/spots")
 public class SpotController {
 
+    private final SpotService spotService;
+
     @GetMapping("/health")
     public String healthCheck() {
         return "Waiting Spot Service is running";
+    }
+
+    @PostMapping
+    public ResponseEntity<Long> createSpot(
+            @RequestBody SpotCreateRequest request
+    ) {
+        return ResponseEntity.ok(spotService.createSpot(request));
     }
 }

@@ -2,6 +2,7 @@ package com.example.waitingspotservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +21,7 @@ public class Spot {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
+    @Builder
     public Spot(
             Long id,
             String name,
