@@ -1,5 +1,7 @@
 package com.example.waitingreservationservice.service;
 
+import com.example.waitingreservationservice.client.SpotFeignClient;
+import com.example.waitingreservationservice.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.repository.ReservationRepository;
 import jakarta.transaction.Transactional;
@@ -10,18 +12,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-//    private final SpotReader spotReader;
+    private final SpotFeignClient spotFeignClient;
 
     @Transactional
-//    @DistributedLock(key = "#spotId")
+    @DistributedLock(key = "#spotId")
     public Long reserve(
             Long spotId,
             String phoneNumber,
             Integer headCount
     ) {
-//        if ( !spotReader.existsById(spotId) ) {
-//            throw new IllegalArgumentException(spotId + "번 스팟이 존재하지 않습니다.");
-//        }
+        if ( !spotFeignClient.canWaiting(spotId) ) {
+            throw new IllegalArgumentException("현재 입장할 수 없는 상태입니다.");
+        }
 
         Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
         return reservationRepository.save(reservation).getId();

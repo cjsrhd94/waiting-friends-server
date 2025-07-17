@@ -21,6 +21,17 @@ public class Spot {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    private enum Status {
+        ALLOW,      // 바로 입장
+        WAITING,    // 대기 모드
+        NOT_ALLOW,  // 입장 불가
+        CLOSED,     // 운영 종료
+    }
+
     @Builder
     public Spot(
             Long id,
@@ -30,5 +41,10 @@ public class Spot {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
+        this.status = Status.CLOSED;
+    }
+
+    public boolean canWaiting() {
+        return this.status == Status.ALLOW || this.status == Status.WAITING;
     }
 }

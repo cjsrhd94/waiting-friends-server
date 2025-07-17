@@ -24,4 +24,11 @@ public class SpotController {
     ) {
         return ResponseEntity.ok(spotService.createSpot(request));
     }
+
+    @GetMapping("/{spotId}/status")
+    public ResponseEntity<Boolean> canWaiting(
+            @PathVariable Long spotId
+    ) {
+        return ResponseEntity.ok(spotService.canWaiting(spotId));
+    }
 }
