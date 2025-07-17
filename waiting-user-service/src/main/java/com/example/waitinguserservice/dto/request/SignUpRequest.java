@@ -13,7 +13,7 @@ public class SignUpRequest {
         return User.builder()
                 .email(email)
                 .password(encodedPassword)
-                .role("ROLE_USER")
+                .role("USER")
                 .build();
     }
 }
