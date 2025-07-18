@@ -56,6 +56,18 @@ public class JwtUtil {
                 .compact();
     }
 
+    public boolean validateToken(String token) {
+        boolean value = true;
+
+        try {
+            parsePayload(token);
+        } catch (Exception e) {
+            value = false;
+        }
+
+        return value;
+    }
+
     private SecretKeySpec generateSecretKey() {
         return new SecretKeySpec(
                 SECRET.getBytes(StandardCharsets.UTF_8),

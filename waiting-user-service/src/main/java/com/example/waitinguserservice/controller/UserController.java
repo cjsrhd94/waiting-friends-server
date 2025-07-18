@@ -1,10 +1,13 @@
 package com.example.waitinguserservice.controller;
 
+import com.example.waitinguserservice.dto.request.LogoutRequest;
 import com.example.waitinguserservice.dto.request.SignUpRequest;
 import com.example.waitinguserservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +25,15 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
         userService.singUp(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/logout")
+    public  ResponseEntity<Void> logout(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody LogoutRequest request
+    ) {
+        userService.logout(userDetails,request);
         return ResponseEntity.ok().build();
     }
 }
