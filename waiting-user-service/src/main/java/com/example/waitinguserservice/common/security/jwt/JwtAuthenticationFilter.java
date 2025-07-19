@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
         String accessToken = jwtUtil.createJwt(username, role, ACCESS_EXPIRATION_TIME);
-        String refreshToken = jwtUtil.createJwt(REFRESH_EXPIRATION_TIME);
+        String refreshToken = jwtUtil.createJwt(username, REFRESH_EXPIRATION_TIME);
 
         redisUtil.setData(REFRESH_TOKEN_CACHE_KEY + username, refreshToken, REFRESH_EXPIRATION_TIME);
 

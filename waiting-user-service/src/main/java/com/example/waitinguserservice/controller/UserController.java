@@ -1,6 +1,8 @@
 package com.example.waitinguserservice.controller;
 
+import com.example.waitinguserservice.common.security.jwt.JwtTokenResponse;
 import com.example.waitinguserservice.dto.request.LogoutRequest;
+import com.example.waitinguserservice.dto.request.ReissueRequest;
 import com.example.waitinguserservice.dto.request.SignUpRequest;
 import com.example.waitinguserservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,13 @@ public class UserController {
     public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
         userService.singUp(request);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<JwtTokenResponse> reissue(
+            @RequestBody ReissueRequest request
+    ) {
+        return ResponseEntity.ok(userService.reissue(request));
     }
 
     @PostMapping("/logout")

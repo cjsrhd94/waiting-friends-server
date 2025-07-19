@@ -38,8 +38,9 @@ public class JwtUtil {
                 .getExpiration().before(new Date());
     }
 
-    public String createJwt(Long expiredMs) {
+    public String createJwt(String email, Long expiredMs) {
         return Jwts.builder()
+                .claim(EMAIL, email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(generateSecretKey())
