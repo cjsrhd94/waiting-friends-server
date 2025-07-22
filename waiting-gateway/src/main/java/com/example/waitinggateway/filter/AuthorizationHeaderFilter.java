@@ -47,7 +47,17 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return onError(exchange, "JWT 토큰이 유효하지 않습니다.");
             }
 
-            return chain.filter(exchange);
+            String email = parsePayload(jwt)
+                    .get("email", String.class);
+            String role = parsePayload(jwt)
+                    .get("role", String.class);
+
+            ServerHttpRequest jwtInfo = request.mutate()
+                    .header("email", email)
+                    .header("role", role)
+                    .build();
+
+            return chain.filter(exchange.mutate().request(jwtInfo).build());
         };
     }
 
@@ -69,6 +79,16 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
 
         return value;
+    }
+
+    public String getEmail(String token) {
+        return parsePayload(token)
+                .get("email", String.class);
+    }
+
+    public String getRole(String token) {
+        return parsePayload(token)
+                .get("role", String.class);
     }
 
     private Claims parsePayload(String token) {
