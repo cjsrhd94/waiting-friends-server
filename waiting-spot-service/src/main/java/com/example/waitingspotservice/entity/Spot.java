@@ -25,23 +25,32 @@ public class Spot {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     private enum Status {
         ALLOW,      // 바로 입장
         WAITING,    // 대기 모드
         NOT_ALLOW,  // 입장 불가
-        CLOSED,     // 운영 종료
+        CLOSED;     // 운영 종료
     }
 
     @Builder
     public Spot(
             Long id,
             String name,
-            Integer capacity
+            Integer capacity,
+            Long userId
     ) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
         this.status = Status.CLOSED;
+        this.userId = userId;
+    }
+
+    public String getStatusToString() {
+        return this.status.name();
     }
 
     public boolean canWaiting() {

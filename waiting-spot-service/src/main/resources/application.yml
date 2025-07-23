@@ -27,3 +27,7 @@ eureka:
 
 server:
   port: 0
+
+spot:
+  server:
+    user: http://localhost:9090/user-service

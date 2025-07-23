@@ -6,14 +6,15 @@ import com.example.waitinguserservice.common.util.RedisUtil;
 import com.example.waitinguserservice.dto.request.LogoutRequest;
 import com.example.waitinguserservice.dto.request.ReissueRequest;
 import com.example.waitinguserservice.dto.request.SignUpRequest;
+import com.example.waitinguserservice.dto.response.UserResponse;
 import com.example.waitinguserservice.entity.User;
 import com.example.waitinguserservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.example.waitinguserservice.repository.reader.UserReader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.waitinguserservice.common.security.jwt.JwtUtil.*;
 
@@ -21,8 +22,8 @@ import static com.example.waitinguserservice.common.security.jwt.JwtUtil.*;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserReader userReader;
     private final PasswordEncoder passwordEncoder;
-    private final RedisTemplate<String, String> redisTemplate;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
@@ -87,5 +88,11 @@ public class UserService {
         }
 
         redisUtil.deleteData(REFRESH_TOKEN_CACHE_KEY + email);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse getUser(String email) {
+        User user = userReader.findByEmail(email);
+        return new UserResponse(user.getId(), user.getEmail());
     }
 }

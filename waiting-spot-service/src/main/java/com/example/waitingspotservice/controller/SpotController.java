@@ -1,6 +1,7 @@
 package com.example.waitingspotservice.controller;
 
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
+import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.service.SpotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,14 @@ public class SpotController {
             @RequestBody SpotCreateRequest request
     ) {
         return ResponseEntity.ok(spotService.createSpot(request));
+    }
+
+    @GetMapping("/{spotId}")
+    public ResponseEntity<SpotResponse> getSpot(
+            @RequestHeader("email") String email,
+            @PathVariable Long spotId
+    ) {
+        return ResponseEntity.ok(spotService.getSpot(email, spotId));
     }
 
     @GetMapping("/{spotId}/status")
