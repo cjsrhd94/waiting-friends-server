@@ -58,7 +58,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
-        String accessToken = jwtUtil.createJwt(user.getEmail(), user.getRole(), ACCESS_EXPIRATION_TIME);
+        String accessToken = jwtUtil.createJwt(user.getId(), user.getEmail(), user.getRole(), ACCESS_EXPIRATION_TIME);
         String resRefreshToken = jwtUtil.createJwt(user.getEmail(), REFRESH_EXPIRATION_TIME);
 
         redisUtil.setData(REFRESH_TOKEN_CACHE_KEY + email, resRefreshToken, REFRESH_EXPIRATION_TIME);

@@ -47,12 +47,15 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return onError(exchange, "JWT 토큰이 유효하지 않습니다.");
             }
 
+            Long userId = parsePayload(jwt)
+                    .get("id", Long.class);
             String email = parsePayload(jwt)
                     .get("email", String.class);
             String role = parsePayload(jwt)
                     .get("role", String.class);
 
             ServerHttpRequest jwtInfo = request.mutate()
+                    .header("id", String.valueOf(userId))
                     .header("email", email)
                     .header("role", role)
                     .build();

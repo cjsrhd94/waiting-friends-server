@@ -41,6 +41,7 @@ spring:
               filters:
                 - RemoveRequestHeader=Cookie
                 - RewritePath=/spot-service/(?<segment>.*), /$\{segment}
+                - AuthorizationHeaderFilter
 
             - id: reservation-service
               uri: lb://reservation-service

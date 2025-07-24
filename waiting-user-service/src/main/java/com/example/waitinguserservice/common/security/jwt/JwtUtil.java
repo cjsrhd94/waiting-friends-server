@@ -20,8 +20,14 @@ public class JwtUtil {
     public static final String REFRESH_TOKEN_CACHE_KEY = "refreshToken:";
     public static final Long REFRESH_EXPIRATION_TIME = 30 * 24 * 60 * 60 * 1000L;
 
+    public static final String ID = "id";
     public static final String EMAIL = "email";
     public static final String ROLE = "role";
+
+    public Long getId(String token) {
+        return parsePayload(token)
+                .get(ID, Long.class);
+    }
 
     public String getEmail(String token) {
         return parsePayload(token)
@@ -47,8 +53,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createJwt(String email, String role, Long expiredMs) {
+    public String createJwt(Long userId, String email, String role, Long expiredMs) {
         return Jwts.builder()
+                .claim(ID, userId)
                 .claim(EMAIL, email)
                 .claim(ROLE, role)
                 .issuedAt(new Date(System.currentTimeMillis()))

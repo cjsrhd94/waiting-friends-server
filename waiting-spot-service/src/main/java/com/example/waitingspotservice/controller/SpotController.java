@@ -21,17 +21,18 @@ public class SpotController {
 
     @PostMapping
     public ResponseEntity<Long> createSpot(
+            @RequestHeader("id") Long userId,
             @RequestBody SpotCreateRequest request
     ) {
-        return ResponseEntity.ok(spotService.createSpot(request));
+        return ResponseEntity.ok(spotService.createSpot(userId, request));
     }
 
     @GetMapping("/{spotId}")
     public ResponseEntity<SpotResponse> getSpot(
-            @RequestHeader("email") String email,
+            @RequestHeader("id") Long userId,
             @PathVariable Long spotId
     ) {
-        return ResponseEntity.ok(spotService.getSpot(email, spotId));
+        return ResponseEntity.ok(spotService.getSpot(userId, spotId));
     }
 
     @GetMapping("/{spotId}/status")

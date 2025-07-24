@@ -1,9 +1,7 @@
 package com.example.waitingspotservice.service;
 
-import com.example.waitingspotservice.client.UserFeignClient;
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
 import com.example.waitingspotservice.dto.response.SpotResponse;
-import com.example.waitingspotservice.dto.response.UserResponse;
 import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
 import com.example.waitingspotservice.repository.reader.SpotReader;
@@ -16,19 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class SpotService {
     private final SpotRepository spotRepository;
     private final SpotReader spotReader;
-    private final UserFeignClient userFeignClient;
 
     @Transactional
-    public Long createSpot(SpotCreateRequest request) {
-        return spotRepository.save(request.toEntity()).getId();
+    public Long createSpot(Long userId, SpotCreateRequest request) {
+        Spot spot = Spot.builder()
+                .name(request.getName())
+                .capacity(request.getCapacity())
+                .userId(userId)
+                .build();
+        return spotRepository.save(spot).getId();
     }
 
     @Transactional(readOnly = true)
-    public SpotResponse getSpot(String email, Long spotId) {
-        UserResponse response = userFeignClient.getUser(email);
+    public SpotResponse getSpot(Long userId, Long spotId) {
         Spot spot = spotReader.findById(spotId);
 
-        if (!spot.getUserId().equals(response.getUserId())) {
+        if (!spot.getUserId().equals(userId)) {
             throw new IllegalArgumentException("해당 스팟에 대한 권한이 없습니다.");
         }
 
