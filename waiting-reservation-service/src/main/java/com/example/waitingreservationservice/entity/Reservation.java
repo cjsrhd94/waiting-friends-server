@@ -54,6 +54,10 @@ public class Reservation {
         CANCELLED // 취소됨
     }
 
+    public String getStatusToString() {
+        return status.name();
+    }
+
     private void validatePhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) {
             throw new IllegalArgumentException("전화번호는 필수 입력 사항입니다.");

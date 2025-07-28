@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.controller;
 
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
+import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,10 @@ public class ReservationController {
                 request.getPhoneNumber(),
                 request.getHeadCount()
         );
+    }
+
+    @GetMapping("/{reservationId}")
+    public ReservationResponse getReservation(@PathVariable Long reservationId) {
+        return reservationService.getReservation(reservationId);
     }
 }
