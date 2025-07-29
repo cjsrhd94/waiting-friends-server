@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -17,4 +19,7 @@ public class ReservationReader {
                 .orElseThrow(() -> new IllegalArgumentException(reservationId + "번 예약이 존재하지 않습니다."));
     }
 
+    public List<Reservation> getReservationsBySpotId(Long spotId) {
+        return reservationRepository.getReservationsBySpotId(spotId);
+    }
 }

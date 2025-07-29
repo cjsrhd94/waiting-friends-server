@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -37,5 +39,13 @@ public class ReservationService {
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationReader.findById(reservationId);
         return new ReservationResponse(reservation);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> getReservationsBySpot(Long spotId) {
+        List<Reservation> reservations = reservationReader.getReservationsBySpotId(spotId);
+        return reservations.stream()
+                .map(ReservationResponse::new)
+                .toList();
     }
 }

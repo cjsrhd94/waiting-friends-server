@@ -6,6 +6,8 @@ import com.example.waitingreservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reservations")
@@ -29,5 +31,10 @@ public class ReservationController {
     @GetMapping("/{reservationId}")
     public ReservationResponse getReservation(@PathVariable Long reservationId) {
         return reservationService.getReservation(reservationId);
+    }
+
+    @GetMapping
+    public List<ReservationResponse> getReservationsBySpot(@RequestParam Long spotId) {
+        return reservationService.getReservationsBySpot(spotId);
     }
 }
