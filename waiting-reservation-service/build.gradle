@@ -31,7 +31,7 @@ dependencies {
 	annotationProcessor('org.projectlombok:lombok')
 
 	// local db
-	runtimeOnly("com.h2database:h2:2.2.224")
+	runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
 
 	// redis
 	implementation 'org.redisson:redisson-spring-boot-starter:3.50.0'

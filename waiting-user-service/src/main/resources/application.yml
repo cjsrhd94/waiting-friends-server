@@ -3,10 +3,10 @@ spring:
     name: user-service
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/waiting-line;MODE=mysql;
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/waiting_friends?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 1234
 
   data:
     redis:
@@ -14,14 +14,12 @@ spring:
       host: localhost
 
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
         show_sql: true
         hbm2ddl:
-          auto: update
+          auto: create
 
 eureka:
   client:
