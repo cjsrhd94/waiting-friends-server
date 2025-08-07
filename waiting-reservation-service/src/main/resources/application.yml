@@ -42,4 +42,4 @@ server:
 
 reservation:
     server:
-      spot: http://localhost:9090/spot-service
+      spot: http://localhost:9090
