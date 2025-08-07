@@ -21,6 +21,7 @@ public class FilterConfig {
                 // user-service
                 .route("user-service",
                         r -> r.path(
+                                        "/api/v1/users/health",
                                         "/api/v1/users/login",
                                         "/api/v1/users/sign-up",
                                         "/api/v1/users/reissue",

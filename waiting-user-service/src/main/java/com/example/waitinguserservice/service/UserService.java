@@ -31,13 +31,34 @@ public class UserService {
     public void singUp(SignUpRequest request) {
         // validate
         checkDuplicateEmail(request.getEmail());
+        checkPassword(request.getPassword());
 
-        userRepository.save(request.toEntity(passwordEncoder.encode(request.getPassword())));
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role("USER")
+                .build();
+
+        userRepository.save(user);
     }
 
     private void checkDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+    }
+
+    private void checkPassword(String password) {
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("비밀번호는 필수 입력값입니다.");
+        }
+
+        if (password.length() < 8 || password.length() > 20) {
+            throw new IllegalArgumentException("비밀번호는 8자 이상 20자 이하로 입력해야 합니다.");
+        }
+
+        if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*[0-9].*")) {
+            throw new IllegalArgumentException("비밀번호는 영문자와 숫자를 모두 포함해야 합니다.");
         }
     }
 

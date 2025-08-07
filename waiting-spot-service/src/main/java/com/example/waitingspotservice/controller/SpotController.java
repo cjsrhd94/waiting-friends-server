@@ -16,7 +16,7 @@ public class SpotController {
 
     @GetMapping("/health")
     public String healthCheck() {
-        return "Waiting Spot Service is running";
+        return "Spot Service is running";
     }
 
     @PostMapping
