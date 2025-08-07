@@ -1,6 +1,7 @@
 package com.example.waitinggateway.config;
 
 import com.example.waitinggateway.filter.AuthorizationHeaderFilter;
+import com.example.waitinggateway.filter.LoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class FilterConfig {
 
     private final AuthorizationHeaderFilter authorizationHeaderFilter;
+    private final LoggingFilter loggingFilter;
 
     @Bean
     public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -27,6 +29,7 @@ public class FilterConfig {
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/user-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
                                 )
                                 .uri("lb://user-service")
                 )
@@ -38,6 +41,7 @@ public class FilterConfig {
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/user-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                 )
                                 .uri("lb://user-service")
@@ -51,6 +55,7 @@ public class FilterConfig {
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/reservation-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
                                 )
                                 .uri("lb://reservation-service")
                 )
@@ -63,6 +68,7 @@ public class FilterConfig {
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
                                 )
                                 .uri("lb://spot-service")
                 )
