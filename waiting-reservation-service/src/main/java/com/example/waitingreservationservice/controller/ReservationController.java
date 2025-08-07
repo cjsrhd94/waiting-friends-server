@@ -5,6 +5,7 @@ import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.service.ReservationProducer;
 import com.example.waitingreservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +23,18 @@ public class ReservationController {
     }
 
     @PostMapping
-    public void reserve(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<Void> reserve(@RequestBody ReservationCreateRequest request) {
         reservationProducer.produceReservationEvent(request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{reservationId}")
-    public ReservationResponse getReservation(@PathVariable Long reservationId) {
-        return reservationService.getReservation(reservationId);
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long reservationId) {
+        return ResponseEntity.ok(reservationService.getReservation(reservationId));
     }
 
     @GetMapping
-    public List<ReservationResponse> getReservationsBySpot(@RequestParam Long spotId) {
-        return reservationService.getReservationsBySpot(spotId);
+    public ResponseEntity<List<ReservationResponse>> getReservationsBySpot(@RequestParam Long spotId) {
+        return ResponseEntity.ok(reservationService.getReservationsBySpot(spotId));
     }
 }
