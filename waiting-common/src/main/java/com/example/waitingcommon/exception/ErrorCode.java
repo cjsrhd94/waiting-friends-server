@@ -1,7 +1,7 @@
 package com.example.waitingcommon.exception;
 
 public interface ErrorCode {
-    int getStatusCode();
+    int getStatus();
     String getErrorCode();
     String getErrorMessage();
 }

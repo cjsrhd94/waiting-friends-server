@@ -1,5 +1,6 @@
 package com.example.waitinguserservice.repository.reader;
 
+import com.example.waitinguserservice.common.exception.UserNotFoundException;
 import com.example.waitinguserservice.entity.User;
 import com.example.waitinguserservice.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +16,6 @@ public class UserReader {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(email + " 해당 이메일이 존재하지 않습니다."));
+                .orElseThrow(() -> new UserNotFoundException(email + ": 해당 이메일이 존재하지 않습니다."));
     }
 }
