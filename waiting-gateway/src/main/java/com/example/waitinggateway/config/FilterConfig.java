@@ -64,11 +64,24 @@ public class FilterConfig {
                 // spot-service
                 .route("spot-service",
                         r -> r.path(
+                                        "/api/v1/spots/*/status"
+                                )
+                                .filters(f -> f
+                                        .removeRequestHeader("Cookie")
+                                        .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                )
+                                .uri("lb://spot-service")
+                )
+
+                .route("spot-service",
+                        r -> r.path(
                                         "/api/v1/spots/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
+                                        .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                         .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
                                 )
                                 .uri("lb://spot-service")
