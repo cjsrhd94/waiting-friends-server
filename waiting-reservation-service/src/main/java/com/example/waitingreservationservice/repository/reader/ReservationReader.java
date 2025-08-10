@@ -22,4 +22,8 @@ public class ReservationReader {
     public List<Reservation> getReservationsBySpotId(Long spotId) {
         return reservationRepository.getReservationsBySpotId(spotId);
     }
+
+    public List<Reservation> getReservationBySpotIdAndStatus(Long spotId, Reservation.ReservationStatus status) {
+        return reservationRepository.getReservationIdBySpotIdAndStatus(spotId, status);
+    }
 }

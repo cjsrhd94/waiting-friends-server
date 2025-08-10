@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class ReservationService {
             String phoneNumber,
             Integer headCount
     ) {
-        if ( !spotFeignClient.canWaiting(spotId) ) {
+        if (!spotFeignClient.canWaiting(spotId)) {
             throw new IllegalArgumentException("현재 입장할 수 없는 상태입니다.");
         }
 
@@ -58,5 +59,23 @@ public class ReservationService {
         return reservations.stream()
                 .map(ReservationResponse::new)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Long getWaitingOrder(Long reservationId, Long spotId) {
+        List<Long> waitingIds = reservationReader.getReservationBySpotIdAndStatus(
+                        spotId,
+                        Reservation.ReservationStatus.WAITING
+                ).stream()
+                .map(Reservation::getId)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < waitingIds.size(); i++) {
+            if (waitingIds.get(i).equals(reservationId)) {
+                return (long) (i + 1);
+            }
+        }
+
+        throw new IllegalArgumentException("해당 예약이 대기 중인 상태가 아닙니다.");
     }
 }

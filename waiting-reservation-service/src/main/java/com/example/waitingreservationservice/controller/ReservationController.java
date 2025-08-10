@@ -47,4 +47,12 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponse>> getReservationsBySpot(@RequestParam Long spotId) {
         return ResponseEntity.ok(reservationService.getReservationsBySpot(spotId));
     }
+
+    @GetMapping("/{reservationId}/order")
+    public ResponseEntity<Long> getWaitingOrder(
+            @PathVariable Long reservationId,
+            @RequestParam Long spotId
+    ) {
+        return ResponseEntity.ok(reservationService.getWaitingOrder(reservationId, spotId));
+    }
 }

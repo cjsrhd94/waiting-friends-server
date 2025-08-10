@@ -21,7 +21,7 @@ public class ReservationResponse {
         this.spotId = reservation.getSpotId();
         this.phoneNumber = reservation.getPhoneNumber();
         this.headCount = reservation.getHeadCount();
-        this.status = reservation.getStatus().toString();
+        this.status = reservation.getStatus().name();
         this.reservationDate = reservation.getReservationDate();
     }
 }
