@@ -2,6 +2,7 @@ package com.example.waitingreservationservice.service;
 
 import com.example.waitingreservationservice.client.SpotFeignClient;
 import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.repository.ReservationRepository;
@@ -33,6 +34,16 @@ public class ReservationService {
 
         Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
         return reservationRepository.save(reservation).getId();
+    }
+
+    @Transactional
+    public void updateReservationStatus(
+            Long reservationId,
+            ReservationUpdateRequest request
+    ) {
+        Reservation reservation = reservationReader.findById(reservationId);
+
+        reservation.updateStatus(request.getStatus());
     }
 
     @Transactional(readOnly = true)

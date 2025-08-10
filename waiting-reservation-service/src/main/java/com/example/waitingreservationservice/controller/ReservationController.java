@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.controller;
 
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
+import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.service.ReservationProducer;
 import com.example.waitingreservationservice.service.ReservationService;
@@ -25,6 +26,15 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Void> reserve(@RequestBody ReservationCreateRequest request) {
         reservationProducer.produceReservationEvent(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{reservationId}/status")
+    public ResponseEntity<Void> updateReservationStatus(
+            @PathVariable Long reservationId,
+            @RequestBody ReservationUpdateRequest request
+    ) {
+        reservationService.updateReservationStatus(reservationId, request);
         return ResponseEntity.ok().build();
     }
 

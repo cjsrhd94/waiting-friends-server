@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Entity
 @Getter
@@ -47,15 +48,31 @@ public class Reservation {
         this.reservationDate = LocalDateTime.now(); // 예약 날짜는 현재 시간으로 설정
     }
 
-    private enum ReservationStatus {
-        WAITING, // 대기 중
-        CALLING, // 호출 중
-        COMPLETED, // 입장 완료
-        CANCELLED // 취소됨
-    }
+    public enum ReservationStatus {
+        WAITING("WA1", "대기중"),
+        CALLING("CA1", "호출 완료"),
+        COMPLETED("CO1", "입장 완료"),
+        CANCELLED("CA2", "취소")
+        ;
 
-    public String getStatusToString() {
-        return status.name();
+        private final String code;
+        private final String description;
+
+        ReservationStatus(String code, String description) {
+            this.code = code;
+            this.description = description;
+        }
+
+        public String toString() {
+            return name();
+        }
+
+        public ReservationStatus findByName(String name) {
+            return Arrays.stream(ReservationStatus.values())
+                    .filter(rs -> rs.name().equals(name))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 예약 상태입니다: " + name));
+        }
     }
 
     private void validatePhoneNumber(String phoneNumber) {
@@ -71,5 +88,9 @@ public class Reservation {
         if (headCount < 1) {
             throw new IllegalArgumentException("방문 인원은 적어도 1명 이상이어야 합니다.");
         }
+    }
+
+    public void updateStatus(String statusName) {
+        this.status = this.status.findByName(statusName);
     }
 }
