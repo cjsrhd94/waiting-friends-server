@@ -20,6 +20,5 @@ public class SpotReader {
 
     public boolean existsById(Long spotId) {
         return spotRepository.existsById(spotId);
-
     }
 }

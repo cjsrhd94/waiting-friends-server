@@ -6,18 +6,21 @@ import lombok.Data;
 public class SpotResponse {
     private Long id;
     private String name;
-    private Integer capacity;
+    private Integer maxCapacity;
+    private Integer remainingCapacity;
     private String status;
 
     public SpotResponse(
             Long id,
             String name,
-            Integer capacity,
+            Integer maxCapacity,
+            Integer remainingCapacity,
             String status
     ) {
         this.id = id;
         this.name = name;
-        this.capacity = capacity;
+        this.maxCapacity = maxCapacity;
+        this.remainingCapacity = remainingCapacity;
         this.status = status;
     }
 }

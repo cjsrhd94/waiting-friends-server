@@ -18,8 +18,11 @@ public class Spot {
     @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name = "capacity", nullable = false)
-    private Integer capacity;
+    @Column(name = "max_capacity", nullable = false)
+    private Integer maxCapacity;
+
+    @Column(name = "remaining_capacity", nullable = false)
+    private Integer remainingCapacity;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -39,12 +42,14 @@ public class Spot {
     public Spot(
             Long id,
             String name,
-            Integer capacity,
+            Integer maxCapacity,
+            Integer remainingCapacity,
             Long userId
     ) {
         this.id = id;
         this.name = name;
-        this.capacity = capacity;
+        this.maxCapacity = maxCapacity;
+        this.remainingCapacity = remainingCapacity;
         this.status = Status.CLOSED;
         this.userId = userId;
     }

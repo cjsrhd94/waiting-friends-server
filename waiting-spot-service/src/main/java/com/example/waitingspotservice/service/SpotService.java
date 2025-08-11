@@ -19,7 +19,8 @@ public class SpotService {
     public Long createSpot(Long userId, SpotCreateRequest request) {
         Spot spot = Spot.builder()
                 .name(request.getName())
-                .capacity(request.getCapacity())
+                .maxCapacity(request.getCapacity())
+                .remainingCapacity(request.getCapacity())
                 .userId(userId)
                 .build();
         return spotRepository.save(spot).getId();
@@ -36,7 +37,8 @@ public class SpotService {
         return new SpotResponse(
                 spot.getId(),
                 spot.getName(),
-                spot.getCapacity(),
+                spot.getMaxCapacity(),
+                spot.getRemainingCapacity(),
                 spot.getStatus().name()
         );
     }
