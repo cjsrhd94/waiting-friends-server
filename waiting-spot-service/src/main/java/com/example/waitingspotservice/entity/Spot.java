@@ -28,7 +28,7 @@ public class Spot {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    private enum Status {
+    public enum Status {
         ALLOW,      // 바로 입장
         WAITING,    // 대기 모드
         NOT_ALLOW,  // 입장 불가
@@ -49,11 +49,7 @@ public class Spot {
         this.userId = userId;
     }
 
-    public String getStatusToString() {
-        return this.status.name();
-    }
-
     public boolean canWaiting() {
-        return this.status == Status.ALLOW || this.status == Status.WAITING;
+        return this.status == Status.WAITING;
     }
 }

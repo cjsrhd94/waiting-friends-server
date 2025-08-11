@@ -37,7 +37,7 @@ public class SpotService {
                 spot.getId(),
                 spot.getName(),
                 spot.getCapacity(),
-                spot.getStatusToString()
+                spot.getStatus().name()
         );
     }
 
