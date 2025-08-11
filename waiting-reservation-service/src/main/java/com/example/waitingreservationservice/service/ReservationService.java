@@ -2,6 +2,7 @@ package com.example.waitingreservationservice.service;
 
 import com.example.waitingreservationservice.client.SpotFeignClient;
 import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -21,6 +22,9 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationReader reservationReader;
     private final SpotFeignClient spotFeignClient;
+    private final RedisUtil redisUtil;
+
+    private final static String SPOT_CACHE_KEY = "spot:";
 
     @Transactional
     @DistributedLock(key = "#spotId")
@@ -63,6 +67,13 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public Long getWaitingOrder(Long reservationId, Long spotId) {
+        List<String> waitingIdsInRedis = redisUtil.getList(SPOT_CACHE_KEY + spotId, 0, -1);
+        for (int i = 0; i < waitingIdsInRedis.size(); i++) {
+            if (waitingIdsInRedis.get(i).equals(String.valueOf(reservationId))) {
+                return (long) (i + 1);
+            }
+        }
+
         List<Long> waitingIds = reservationReader.getReservationBySpotIdAndStatus(
                         spotId,
                         Reservation.ReservationStatus.WAITING
