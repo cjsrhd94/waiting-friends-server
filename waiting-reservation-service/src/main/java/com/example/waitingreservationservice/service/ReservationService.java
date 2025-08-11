@@ -47,8 +47,9 @@ public class ReservationService {
             ReservationUpdateRequest request
     ) {
         Reservation reservation = reservationReader.findById(reservationId);
-
         reservation.updateStatus(request.getStatus());
+
+        redisUtil.remove(SPOT_CACHE_KEY, 0, reservation.toString());
     }
 
     @Transactional(readOnly = true)

@@ -33,4 +33,11 @@ public class RedisUtil {
         return redisTemplate.opsForList().range(key, start, end);
     }
 
+    public void rPush(String key, String value) {
+        redisTemplate.opsForList().rightPush(key, value);
+    }
+
+    public void remove(String key, long count, String value) {
+        redisTemplate.opsForList().remove(key, count, value);
+    }
 }
