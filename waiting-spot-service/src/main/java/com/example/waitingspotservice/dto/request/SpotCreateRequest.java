@@ -6,4 +6,5 @@ import lombok.Data;
 public class SpotCreateRequest {
     private String name;
     private Integer capacity;
+    private String address;
 }

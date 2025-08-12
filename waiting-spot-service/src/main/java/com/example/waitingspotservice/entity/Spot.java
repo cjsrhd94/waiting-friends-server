@@ -24,6 +24,9 @@ public class Spot {
     @Column(name = "remaining_capacity", nullable = false)
     private Integer remainingCapacity;
 
+    @Column(name = "address", nullable = false)
+    private String address;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -44,12 +47,14 @@ public class Spot {
             String name,
             Integer maxCapacity,
             Integer remainingCapacity,
+            String address,
             Long userId
     ) {
         this.id = id;
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.remainingCapacity = remainingCapacity;
+        this.address = address;
         this.status = Status.CLOSED;
         this.userId = userId;
     }

@@ -23,6 +23,7 @@ public class SpotService {
                 .name(request.getName())
                 .maxCapacity(request.getCapacity())
                 .remainingCapacity(request.getCapacity())
+                .address(request.getAddress())
                 .userId(userId)
                 .build();
         return spotRepository.save(spot).getId();
