@@ -1,5 +1,6 @@
 package com.example.waitinguserservice.service;
 
+import com.example.waitinguserservice.common.exception.InvalidRefreshTokenException;
 import com.example.waitinguserservice.common.security.jwt.JwtTokenResponse;
 import com.example.waitinguserservice.common.security.jwt.JwtUtil;
 import com.example.waitinguserservice.common.util.RedisUtil;
@@ -24,14 +25,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserReader userReader;
     private final PasswordEncoder passwordEncoder;
+    private final SignUpValidator signUpValidator;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
     @Transactional
     public void singUp(SignUpRequest request) {
-        // validate
-        checkDuplicateEmail(request.getEmail());
-        checkPassword(request.getPassword());
+        signUpValidator.validate(request.getEmail(), request.getPassword());
 
         User user = User.builder()
                 .email(request.getEmail())
@@ -42,42 +42,21 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private void checkDuplicateEmail(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
-    }
-
-    private void checkPassword(String password) {
-        if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호는 필수 입력값입니다.");
-        }
-
-        if (password.length() < 8 || password.length() > 20) {
-            throw new IllegalArgumentException("비밀번호는 8자 이상 20자 이하로 입력해야 합니다.");
-        }
-
-        if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*[0-9].*")) {
-            throw new IllegalArgumentException("비밀번호는 영문자와 숫자를 모두 포함해야 합니다.");
-        }
-    }
-
     @Transactional
     public JwtTokenResponse reissue(ReissueRequest request) {
         String tokenValue = request.getRefreshToken();
 
         if (!jwtUtil.validateToken(tokenValue)) {
-            throw new RuntimeException();
+            throw new InvalidRefreshTokenException();
         }
 
         String email = jwtUtil.getEmail(tokenValue);
 
         if (!redisUtil.getData(REFRESH_TOKEN_CACHE_KEY + email).equals(tokenValue)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new InvalidRefreshTokenException();
         }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        User user = userReader.findByEmail(email);
 
         String accessToken = jwtUtil.createJwt(user.getId(), user.getEmail(), user.getRole(), ACCESS_EXPIRATION_TIME);
         String resRefreshToken = jwtUtil.createJwt(user.getEmail(), REFRESH_EXPIRATION_TIME);
@@ -98,14 +77,14 @@ public class UserService {
         String tokenValue = request.getRefreshToken();
 
         if (!jwtUtil.validateToken(tokenValue)) {
-            throw new RuntimeException();
+            throw new InvalidRefreshTokenException();
         }
 
         String email = userDetails.getUsername();
 
         // redis에 저장된 토큰과 비교
         if (!redisUtil.getData(REFRESH_TOKEN_CACHE_KEY + email).equals(tokenValue)) {
-            throw new IllegalArgumentException("로그아웃 실패: 유효하지 않은 토큰입니다.");
+            throw new InvalidRefreshTokenException();
         }
 
         redisUtil.deleteData(REFRESH_TOKEN_CACHE_KEY + email);
