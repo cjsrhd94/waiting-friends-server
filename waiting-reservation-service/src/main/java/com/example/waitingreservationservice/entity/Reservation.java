@@ -93,6 +93,4 @@ public class Reservation {
     public void updateStatus(String statusName) {
         this.status = this.status.findByName(statusName);
     }
-
-
 }
