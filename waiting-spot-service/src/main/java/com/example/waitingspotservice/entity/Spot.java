@@ -57,4 +57,9 @@ public class Spot {
     public boolean canWaiting() {
         return this.status == Status.WAITING;
     }
+
+    public Integer decreaseRemainingCapacity(Integer headCount) {
+        this.remainingCapacity = this.remainingCapacity - headCount;
+        return this.remainingCapacity;
+    }
 }
