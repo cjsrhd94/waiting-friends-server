@@ -1,7 +1,6 @@
 package com.example.waitingreservationservice.client;
 
 import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingreservationservice.dto.response.SpotRemainingCapacityResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +13,7 @@ public interface SpotFeignClient {
     Boolean canWaiting(@PathVariable("spotId") Long spotId);
 
     @PutMapping("/{spotId}/capacity")
-    SpotRemainingCapacityResponse decreaseRemainingCapacity(
+    Void decreaseRemainingCapacity(
             @PathVariable("spotId") Long spotId,
             SpotRemainingCapacityRequest request
     );

@@ -2,7 +2,6 @@ package com.example.waitingspotservice.service;
 
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
 import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingspotservice.dto.response.SpotRemainingCapacityResponse;
 import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
@@ -47,19 +46,13 @@ public class SpotService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean canWaiting(Long spotId) {
-        return spotReader.findById(spotId).canWaiting();
+    public Boolean canWait(Long spotId) {
+        return spotReader.findById(spotId).canWait();
     }
 
     @Transactional
-    public SpotRemainingCapacityResponse decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
+    public void decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
         Spot spot = spotReader.findById(spotId);
-
-        if (spot.getRemainingCapacity() < request.getHeadCount()) {
-            throw new IllegalArgumentException("남은 수용 인원이 부족합니다.");
-        }
-
-        Integer remainingCapacity = spot.decreaseRemainingCapacity(request.getHeadCount());
-        return new SpotRemainingCapacityResponse(remainingCapacity);
+        spot.decreaseRemainingCapacity(request.getHeadCount());
     }
 }

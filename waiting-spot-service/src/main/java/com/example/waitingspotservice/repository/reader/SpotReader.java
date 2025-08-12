@@ -1,6 +1,7 @@
 package com.example.waitingspotservice.repository.reader;
 
 
+import com.example.waitingspotservice.common.exception.SpotNotFoundException;
 import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,6 @@ public class SpotReader {
 
     public Spot findById(Long spotId) {
         return spotRepository.findById(spotId)
-                .orElseThrow(() -> new IllegalArgumentException(spotId + "번 스팟이 존재하지 않습니다."));
-    }
-
-    public boolean existsById(Long spotId) {
-        return spotRepository.existsById(spotId);
+                .orElseThrow(() -> new SpotNotFoundException(spotId + " : 해당 스팟이 존재하지 않습니다."));
     }
 }

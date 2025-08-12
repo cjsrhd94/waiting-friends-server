@@ -5,7 +5,6 @@ import com.example.waitingreservationservice.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingreservationservice.dto.response.SpotRemainingCapacityResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;

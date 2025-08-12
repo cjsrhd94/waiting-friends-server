@@ -2,7 +2,6 @@ package com.example.waitingspotservice.controller;
 
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
 import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingspotservice.dto.response.SpotRemainingCapacityResponse;
 import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.service.SpotService;
 import lombok.RequiredArgsConstructor;
@@ -38,17 +37,18 @@ public class SpotController {
     }
 
     @GetMapping("/{spotId}/status")
-    public ResponseEntity<Boolean> canWaiting(
+    public ResponseEntity<Boolean> canWait(
             @PathVariable Long spotId
     ) {
-        return ResponseEntity.ok(spotService.canWaiting(spotId));
+        return ResponseEntity.ok(spotService.canWait(spotId));
     }
 
     @PutMapping("/{spotId}/capacity")
-    public ResponseEntity<SpotRemainingCapacityResponse> decreaseRemainingCapacity(
+    public ResponseEntity<Void> decreaseRemainingCapacity(
             @PathVariable Long spotId,
             @RequestBody SpotRemainingCapacityRequest request
-            ) {
-        return ResponseEntity.ok(spotService.decreaseRemainingCapacity(spotId, request));
+    ) {
+        spotService.decreaseRemainingCapacity(spotId, request);
+        return ResponseEntity.ok().build();
     }
 }

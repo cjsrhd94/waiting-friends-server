@@ -1,5 +1,6 @@
 package com.example.waitingspotservice.entity;
 
+import com.example.waitingspotservice.common.exception.NotEnoughCapacityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -59,12 +60,17 @@ public class Spot {
         this.userId = userId;
     }
 
-    public boolean canWaiting() {
+    public boolean canWait() {
         return this.status == Status.WAITING;
     }
 
-    public Integer decreaseRemainingCapacity(Integer headCount) {
+    public void decreaseRemainingCapacity(Integer headCount) {
+        if (this.remainingCapacity < headCount) {
+            throw new NotEnoughCapacityException(
+                    "최대 " + remainingCapacity + "명까지 대기할 수 있습니다. 요청한 인원: " + headCount
+            );
+        }
+
         this.remainingCapacity = this.remainingCapacity - headCount;
-        return this.remainingCapacity;
     }
 }
