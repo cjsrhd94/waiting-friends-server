@@ -1,5 +1,8 @@
 package com.example.waitingreservationservice.entity;
 
+import com.example.waitingreservationservice.common.exception.InvalidHeadCountException;
+import com.example.waitingreservationservice.common.exception.InvalidPhoneNumberFormatException;
+import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -63,30 +66,26 @@ public class Reservation {
             this.description = description;
         }
 
-        public String toString() {
-            return name();
-        }
-
         public ReservationStatus findByName(String name) {
             return Arrays.stream(ReservationStatus.values())
                     .filter(rs -> rs.name().equals(name))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 예약 상태입니다: " + name));
+                    .orElseThrow(() -> new InvalidReservationStatusException("유효하지 않은 예약 상태입니다: " + name));
         }
     }
 
     private void validatePhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("전화번호는 필수 입력 사항입니다.");
+            throw new InvalidPhoneNumberFormatException("전화번호는 필수 입력 사항입니다.");
         }
         if (!phoneNumber.matches("^0\\d{1,2}-\\d{3,4}-\\d{4}$")) {
-            throw new IllegalArgumentException("전화번호는 10자리 또는 11자리 숫자여야 합니다.");
+            throw new InvalidPhoneNumberFormatException("전화번호는 10자리 또는 11자리 숫자여야 합니다.");
         }
     }
 
     private void isOverHeadCount(Integer headCount) {
         if (headCount < 1) {
-            throw new IllegalArgumentException("방문 인원은 적어도 1명 이상이어야 합니다.");
+            throw new InvalidHeadCountException("방문 인원은 적어도 1명 이상이어야 합니다.");
         }
     }
 

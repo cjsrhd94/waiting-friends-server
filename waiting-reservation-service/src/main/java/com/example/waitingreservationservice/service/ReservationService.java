@@ -2,6 +2,7 @@ package com.example.waitingreservationservice.service;
 
 import com.example.waitingreservationservice.client.SpotFeignClient;
 import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
@@ -88,6 +89,6 @@ public class ReservationService {
             }
         }
 
-        throw new IllegalArgumentException("해당 예약이 대기 중인 상태가 아닙니다.");
+        throw new InvalidReservationStatusException("해당 예약은 대기 상태가 아닙니다.");
     }
 }
