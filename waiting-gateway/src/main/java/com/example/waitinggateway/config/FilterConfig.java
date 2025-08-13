@@ -65,7 +65,7 @@ public class FilterConfig {
                 .route("spot-service",
                         r -> r.path(
                                         "/api/v1/spots/*/status",
-                                        "/api/v1/spots/*/capacity"
+                                        "/api/v1/spots/*/capacity/*"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")

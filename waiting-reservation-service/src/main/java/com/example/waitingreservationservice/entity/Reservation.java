@@ -55,8 +55,7 @@ public class Reservation {
         WAITING("WA1", "대기중"),
         CALLING("CA1", "호출 완료"),
         COMPLETED("CO1", "입장 완료"),
-        CANCELLED("CA2", "취소")
-        ;
+        CANCELLED("CA2", "취소");
 
         private final String code;
         private final String description;
@@ -89,7 +88,12 @@ public class Reservation {
         }
     }
 
-    public void updateStatus(String statusName) {
+    public ReservationStatus updateStatus(String statusName) {
         this.status = this.status.findByName(statusName);
+        return status;
+    }
+
+    public Boolean isCancelled() {
+        return this.status == ReservationStatus.CANCELLED;
     }
 }

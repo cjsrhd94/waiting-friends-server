@@ -58,6 +58,12 @@ public class SpotService {
     }
 
     @Transactional
+    public void increaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
+        Spot spot = spotReader.findById(spotId);
+        spot.increaseRemainingCapacity(request.getHeadCount());
+    }
+
+    @Transactional
     public void updateSpotStatus(Long spotId, StatusUpdateRequest request) {
         Spot spot = spotReader.findById(spotId);
         spot.updateStatus(request.getStatus());

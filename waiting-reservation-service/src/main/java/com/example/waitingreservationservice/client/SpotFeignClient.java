@@ -12,8 +12,14 @@ public interface SpotFeignClient {
     @GetMapping("/{spotId}/status")
     Boolean canWaiting(@PathVariable("spotId") Long spotId);
 
-    @PutMapping("/{spotId}/capacity")
+    @PutMapping("/{spotId}/capacity/decrease")
     Void decreaseRemainingCapacity(
+            @PathVariable("spotId") Long spotId,
+            SpotRemainingCapacityRequest request
+    );
+
+    @PutMapping("/{spotId}/capacity/increase")
+    Void increaseRemainingCapacity(
             @PathVariable("spotId") Long spotId,
             SpotRemainingCapacityRequest request
     );

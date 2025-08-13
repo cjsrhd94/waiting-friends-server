@@ -44,12 +44,21 @@ public class SpotController {
         return ResponseEntity.ok(spotService.canWait(spotId));
     }
 
-    @PutMapping("/{spotId}/capacity")
+    @PutMapping("/{spotId}/capacity/decrease")
     public ResponseEntity<Void> decreaseRemainingCapacity(
             @PathVariable Long spotId,
             @RequestBody SpotRemainingCapacityRequest request
     ) {
         spotService.decreaseRemainingCapacity(spotId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{spotId}/capacity/increase")
+    public ResponseEntity<Void> increaseRemainingCapacity(
+            @PathVariable Long spotId,
+            @RequestBody SpotRemainingCapacityRequest request
+    ) {
+        spotService.increaseRemainingCapacity(spotId, request);
         return ResponseEntity.ok().build();
     }
 

@@ -83,6 +83,10 @@ public class Spot {
         this.remainingCapacity = this.remainingCapacity - headCount;
     }
 
+    public void increaseRemainingCapacity(Integer headCount) {
+        this.remainingCapacity = this.remainingCapacity + headCount;
+    }
+
     public void updateStatus(String status) {
         this.status = this.status.findByName(status);
 

@@ -5,6 +5,7 @@ import com.example.waitingreservationservice.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
+import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.repository.ReservationRepository;
@@ -48,7 +49,15 @@ public class ReservationService {
             ReservationUpdateRequest request
     ) {
         Reservation reservation = reservationReader.findById(reservationId);
+
         reservation.updateStatus(request.getStatus());
+
+        if (reservation.isCancelled()) {
+            spotFeignClient.increaseRemainingCapacity(
+                    reservation.getSpotId(),
+                    new SpotRemainingCapacityRequest(reservation.getHeadCount())
+            );
+        }
 
         redisUtil.remove(SPOT_CACHE_KEY, 0, reservation.toString());
     }
