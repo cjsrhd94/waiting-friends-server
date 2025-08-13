@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,6 +42,13 @@ public class Spot {
         WAITING,    // 대기 모드
         NOT_ALLOW,  // 입장 불가
         CLOSED;     // 운영 종료
+
+        public Status findByName(String name) {
+            return Arrays.stream(Status.values())
+                    .filter(s -> s.name().equals(name))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 영업 상태입니다: " + name));
+        }
     }
 
     @Builder
@@ -72,5 +81,14 @@ public class Spot {
         }
 
         this.remainingCapacity = this.remainingCapacity - headCount;
+    }
+
+    public void updateStatus(String status) {
+        this.status = this.status.findByName(status);
+
+        // 영업 종료시 잔여 수용량을 최대 수용량으로 초기화 한다.
+        if (this.status == Status.CLOSED) {
+            this.remainingCapacity = this.maxCapacity;
+        }
     }
 }

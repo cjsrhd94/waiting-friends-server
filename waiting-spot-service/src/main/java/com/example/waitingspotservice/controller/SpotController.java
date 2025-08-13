@@ -2,6 +2,7 @@ package com.example.waitingspotservice.controller;
 
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
 import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
+import com.example.waitingspotservice.dto.request.StatusUpdateRequest;
 import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.service.SpotService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,15 @@ public class SpotController {
             @RequestBody SpotRemainingCapacityRequest request
     ) {
         spotService.decreaseRemainingCapacity(spotId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{spotId}/status")
+    public ResponseEntity<Void> updateSpotStatus(
+            @PathVariable Long spotId,
+            @RequestBody StatusUpdateRequest request
+    ) {
+        spotService.updateSpotStatus(spotId, request);
         return ResponseEntity.ok().build();
     }
 }

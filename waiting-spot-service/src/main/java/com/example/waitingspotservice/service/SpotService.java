@@ -2,6 +2,7 @@ package com.example.waitingspotservice.service;
 
 import com.example.waitingspotservice.dto.request.SpotCreateRequest;
 import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
+import com.example.waitingspotservice.dto.request.StatusUpdateRequest;
 import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
@@ -54,5 +55,11 @@ public class SpotService {
     public void decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
         Spot spot = spotReader.findById(spotId);
         spot.decreaseRemainingCapacity(request.getHeadCount());
+    }
+
+    @Transactional
+    public void updateSpotStatus(Long spotId, StatusUpdateRequest request) {
+        Spot spot = spotReader.findById(spotId);
+        spot.updateStatus(request.getStatus());
     }
 }
