@@ -1,5 +1,6 @@
 package com.example.waitingspotservice.entity;
 
+import com.example.waitingspotservice.common.exception.InvalidSpotStatusException;
 import com.example.waitingspotservice.common.exception.NotEnoughCapacityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -47,7 +48,7 @@ public class Spot {
             return Arrays.stream(Status.values())
                     .filter(s -> s.name().equals(name))
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 영업 상태입니다: " + name));
+                    .orElseThrow(() -> new InvalidSpotStatusException("유효하지 않은 영업 상태입니다: " + name));
         }
     }
 

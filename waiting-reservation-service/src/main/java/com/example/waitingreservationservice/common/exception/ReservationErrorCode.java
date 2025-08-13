@@ -8,6 +8,7 @@ public enum ReservationErrorCode implements ErrorCode {
     INVALID_RESERVATION_STATUS(HttpStatus.BAD_REQUEST, "INVALID_RESERVATION_STATUS", "유효하지 않은 예약 상태입니다."),
     INVALID_PHONE_NUMBER(HttpStatus.BAD_REQUEST, "INVALID_PHONE_NUMBER", "유효하지 않은 전화번호 형식입니다."),
     INVALID_HEAD_COUNT(HttpStatus.BAD_REQUEST, "INVALID_HEAD_COUNT", "유효하지 않은 인원 수입니다."),
+    ENTER_NOT_ALLOW(HttpStatus.BAD_REQUEST, "ENTER_NOT_ALLOW", "현재 입장할 수 없는 상태입니다."),
     ;
 
     private final HttpStatus status;

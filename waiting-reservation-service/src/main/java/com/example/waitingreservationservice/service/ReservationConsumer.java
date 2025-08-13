@@ -2,6 +2,7 @@ package com.example.waitingreservationservice.service;
 
 import com.example.waitingreservationservice.client.SpotFeignClient;
 import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
@@ -25,7 +26,7 @@ public class ReservationConsumer {
         ReservationCreateRequest payload = record.value();
 
         if ( !spotFeignClient.canWaiting(payload.getSpotId()) ) {
-            throw new IllegalArgumentException("현재 입장할 수 없는 상태입니다.");
+            throw new EnterNotAllowException("현재 입장할 수 없는 상태입니다.");
         }
 
         Reservation reservation = new Reservation(payload.getSpotId(), payload.getPhoneNumber(), payload.getHeadCount());

@@ -33,10 +33,6 @@ public class SpotService {
     public SpotResponse getSpot(Long userId, Long spotId) {
         Spot spot = spotReader.findById(spotId);
 
-        if (!spot.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("해당 스팟에 대한 권한이 없습니다.");
-        }
-
         return new SpotResponse(
                 spot.getId(),
                 spot.getName(),
