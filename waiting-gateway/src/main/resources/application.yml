@@ -1,3 +1,7 @@
+spring:
+  application:
+    name: waiting-gateway
+
 server:
   port: 9090
 
@@ -8,6 +12,8 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
 
-spring:
-  application:
-    name: waiting-gateway
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
