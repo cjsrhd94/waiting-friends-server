@@ -12,6 +12,7 @@ import com.example.waitinguserservice.entity.User;
 import com.example.waitinguserservice.repository.UserRepository;
 import com.example.waitinguserservice.repository.reader.UserReader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.waitinguserservice.common.security.jwt.JwtUtil.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,6 +40,8 @@ public class UserService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role("USER")
                 .build();
+
+        log.info("Signing up user with email: {}", user.getEmail());
 
         userRepository.save(user);
     }
