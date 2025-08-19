@@ -51,6 +51,14 @@ public class SpotService {
     public void decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
         Spot spot = spotReader.findById(spotId);
         spot.decreaseRemainingCapacity(request.getHeadCount());
+        spotRepository.save(spot);
+    }
+
+    @Transactional
+    public void decreaseRemainingCapacityWithPessimisticLock(Long spotId, SpotRemainingCapacityRequest request) {
+        Spot spot = spotReader.findByIdForUpdate(spotId);
+        spot.decreaseRemainingCapacity(request.getHeadCount());
+        spotRepository.save(spot);
     }
 
     @Transactional

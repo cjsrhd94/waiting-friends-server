@@ -18,4 +18,9 @@ public class SpotReader {
         return spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotNotFoundException(spotId + " : 해당 스팟이 존재하지 않습니다."));
     }
+
+    public Spot findByIdForUpdate(Long spotId) {
+        return spotRepository.findByIdForUpdate(spotId)
+                .orElseThrow(() -> new SpotNotFoundException(spotId + " : 해당 스팟이 존재하지 않습니다."));
+    }
 }
