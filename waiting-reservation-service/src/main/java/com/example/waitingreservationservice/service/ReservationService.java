@@ -41,7 +41,11 @@ public class ReservationService {
         }
 
         Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
-        return reservationRepository.save(reservation).getId();
+        Long reservationId =  reservationRepository.save(reservation).getId();
+
+        spotFeignClient.decreaseRemainingCapacity(spotId, new SpotRemainingCapacityRequest(headCount));
+
+        return reservationId;
     }
 
     @Transactional
