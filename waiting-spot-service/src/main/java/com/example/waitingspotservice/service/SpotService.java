@@ -26,6 +26,7 @@ public class SpotService {
                 .address(request.getAddress())
                 .userId(userId)
                 .build();
+
         return spotRepository.save(spot).getId();
     }
 
@@ -36,6 +37,7 @@ public class SpotService {
         return new SpotResponse(
                 spot.getId(),
                 spot.getName(),
+                spot.getAddress(),
                 spot.getMaxCapacity(),
                 spot.getRemainingCapacity(),
                 spot.getStatus().name()
