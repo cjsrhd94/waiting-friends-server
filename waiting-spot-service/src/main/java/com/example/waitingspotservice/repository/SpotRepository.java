@@ -14,8 +14,12 @@ import java.util.Optional;
 @Repository
 public interface SpotRepository extends JpaRepository<Spot, Long> {
 
+    @Lock(LockModeType.OPTIMISTIC)
+    @Query("SELECT s FROM Spot s WHERE s.id = :spotId")
+    Optional<Spot> findByIdForOptimistic(Long spotId);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")})
+    @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "1000")})
     @Query("SELECT s FROM Spot s WHERE s.id = :spotId")
     Optional<Spot> findByIdForUpdate(Long spotId);
 }

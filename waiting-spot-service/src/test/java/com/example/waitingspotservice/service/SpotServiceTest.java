@@ -5,7 +5,8 @@ import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
 import com.example.waitingspotservice.repository.reader.SpotReader;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,22 +30,27 @@ class SpotServiceTest {
     @Autowired
     private SpotRepository spotRepository;
 
-    @BeforeEach
-    void setUp() {
-        Spot spot = new Spot(1L, "점포 1호", 1000, 1000, "서울특별시 영등포구", 1L);
-        spotRepository.saveAndFlush(spot);
+    @AfterEach
+    void tearDown() {
+        spotRepository.deleteAll();
     }
 
     @Test
-    void reserve() throws InterruptedException {
-        int threadCount = 100;
+    void 낙관적_락을_사용하여_잔여_수용량을_감소시킨다() throws InterruptedException {
+        Integer remainingCapacity = 1000;
+        Spot spot1 = new Spot("점포 1호", 1000, remainingCapacity, "서울특별시 영등포구", 1L);
+        Long spotId = spotRepository.save(spot1).getId();
+
+        int threadCount = 3;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
 
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    spotService.decreaseRemainingCapacityWithPessimisticLock(1L,  new SpotRemainingCapacityRequest(1));
+                    spotService.decreaseRemainingCapacityWithOptimisticLock(
+                            spotId, new SpotRemainingCapacityRequest(1)
+                    );
                 } finally {
                     latch.countDown();
                 }
@@ -53,8 +59,37 @@ class SpotServiceTest {
 
         latch.await();
 
-        Spot spot = spotReader.findById(1L);
+        Spot spot = spotReader.findById(spotId);
 
-        assertEquals(900, spot.getRemainingCapacity());
+        assertEquals(remainingCapacity - threadCount, spot.getRemainingCapacity());
+    }
+
+    @Test
+    void 비관적_락을_사용하여_잔여_수용량을_감소시킨다() throws InterruptedException {
+        Integer remainingCapacity = 1000;
+        Spot spot1 = new Spot("점포 1호", 1000, remainingCapacity, "서울특별시 영등포구", 1L);
+        Long spotId = spotRepository.save(spot1).getId();
+
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        for (int i = 0; i < threadCount; i++) {
+            executorService.execute(() -> {
+                try {
+                    spotService.decreaseRemainingCapacityWithPessimisticLock(
+                            spotId, new SpotRemainingCapacityRequest(1)
+                    );
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        Spot spot = spotReader.findById(spotId);
+
+        assertEquals(remainingCapacity - threadCount, spot.getRemainingCapacity());
     }
 }

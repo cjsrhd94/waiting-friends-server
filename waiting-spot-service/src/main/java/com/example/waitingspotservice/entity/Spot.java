@@ -19,6 +19,9 @@ public class Spot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @Column(name="name", nullable = false)
     private String name;
 
@@ -54,14 +57,12 @@ public class Spot {
 
     @Builder
     public Spot(
-            Long id,
             String name,
             Integer maxCapacity,
             Integer remainingCapacity,
             String address,
             Long userId
     ) {
-        this.id = id;
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.remainingCapacity = remainingCapacity;

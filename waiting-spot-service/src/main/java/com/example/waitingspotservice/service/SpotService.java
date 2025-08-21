@@ -7,7 +7,12 @@ import com.example.waitingspotservice.dto.response.SpotResponse;
 import com.example.waitingspotservice.entity.Spot;
 import com.example.waitingspotservice.repository.SpotRepository;
 import com.example.waitingspotservice.repository.reader.SpotReader;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.StaleObjectStateException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +57,22 @@ public class SpotService {
     @Transactional
     public void decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
         Spot spot = spotReader.findById(spotId);
+        spot.decreaseRemainingCapacity(request.getHeadCount());
+        spotRepository.save(spot);
+    }
+
+    @Transactional
+    @Retryable(
+            retryFor = {
+                    ObjectOptimisticLockingFailureException.class,
+                    OptimisticLockException.class,
+                    StaleObjectStateException.class
+            },
+            maxAttempts = 5,
+            backoff = @Backoff(delay = 1000)
+    )
+    public void decreaseRemainingCapacityWithOptimisticLock(Long spotId, SpotRemainingCapacityRequest request) {
+        Spot spot = spotReader.findByIdForOptimistic(spotId);
         spot.decreaseRemainingCapacity(request.getHeadCount());
         spotRepository.save(spot);
     }
