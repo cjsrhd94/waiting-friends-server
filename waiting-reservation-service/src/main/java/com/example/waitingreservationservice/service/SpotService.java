@@ -1,12 +1,12 @@
-package com.example.waitingspotservice.service;
+package com.example.waitingreservationservice.service;
 
-import com.example.waitingspotservice.dto.request.SpotCreateRequest;
-import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingspotservice.dto.request.StatusUpdateRequest;
-import com.example.waitingspotservice.dto.response.SpotResponse;
-import com.example.waitingspotservice.entity.Spot;
-import com.example.waitingspotservice.repository.SpotRepository;
-import com.example.waitingspotservice.repository.reader.SpotReader;
+import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
+import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
+import com.example.waitingreservationservice.dto.request.StatusUpdateRequest;
+import com.example.waitingreservationservice.dto.response.SpotResponse;
+import com.example.waitingreservationservice.entity.Spot;
+import com.example.waitingreservationservice.repository.SpotRepository;
+import com.example.waitingreservationservice.repository.reader.SpotReader;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.StaleObjectStateException;
@@ -49,18 +49,6 @@ public class SpotService {
         );
     }
 
-    @Transactional(readOnly = true)
-    public Boolean canWait(Long spotId) {
-        return spotReader.findById(spotId).canWait();
-    }
-
-    @Transactional
-    public void decreaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
-        Spot spot = spotReader.findById(spotId);
-        spot.decreaseRemainingCapacity(request.getHeadCount());
-        spotRepository.save(spot);
-    }
-
     @Transactional
     @Retryable(
             retryFor = {
@@ -82,12 +70,6 @@ public class SpotService {
         Spot spot = spotReader.findByIdForUpdate(spotId);
         spot.decreaseRemainingCapacity(request.getHeadCount());
         spotRepository.save(spot);
-    }
-
-    @Transactional
-    public void increaseRemainingCapacity(Long spotId, SpotRemainingCapacityRequest request) {
-        Spot spot = spotReader.findById(spotId);
-        spot.increaseRemainingCapacity(request.getHeadCount());
     }
 
     @Transactional

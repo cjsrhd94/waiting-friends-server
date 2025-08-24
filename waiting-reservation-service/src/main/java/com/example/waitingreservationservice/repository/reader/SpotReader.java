@@ -1,9 +1,9 @@
-package com.example.waitingspotservice.repository.reader;
+package com.example.waitingreservationservice.repository.reader;
 
 
-import com.example.waitingspotservice.common.exception.SpotNotFoundException;
-import com.example.waitingspotservice.entity.Spot;
-import com.example.waitingspotservice.repository.SpotRepository;
+import com.example.waitingreservationservice.common.exception.SpotNotFoundException;
+import com.example.waitingreservationservice.entity.Spot;
+import com.example.waitingreservationservice.repository.SpotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

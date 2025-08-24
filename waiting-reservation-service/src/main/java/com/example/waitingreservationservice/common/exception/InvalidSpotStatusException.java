@@ -1,4 +1,4 @@
-package com.example.waitingspotservice.common.exception;
+package com.example.waitingreservationservice.common.exception;
 
 import com.example.waitingcommon.exception.BusinessException;
 

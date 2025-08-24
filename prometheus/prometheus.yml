@@ -18,11 +18,6 @@ scrape_configs:
     static_configs:
       - targets: [ 'host.docker.internal:24071' ]
 
-  - job_name: spot-service
-    metrics_path: '/actuator/prometheus'
-    static_configs:
-      - targets: [ 'host.docker.internal:24081' ]
-
   - job_name: reservation-service
     metrics_path: '/actuator/prometheus'
     static_configs:

@@ -1,6 +1,7 @@
-package com.example.waitingspotservice.repository;
+package com.example.waitingreservationservice.repository;
 
-import com.example.waitingspotservice.entity.Spot;
+
+import com.example.waitingreservationservice.entity.Spot;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;

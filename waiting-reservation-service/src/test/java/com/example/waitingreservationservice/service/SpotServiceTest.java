@@ -1,12 +1,12 @@
-package com.example.waitingspotservice.service;
+package com.example.waitingreservationservice.service;
 
-import com.example.waitingspotservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingspotservice.entity.Spot;
-import com.example.waitingspotservice.repository.SpotRepository;
-import com.example.waitingspotservice.repository.reader.SpotReader;
+
+import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
+import com.example.waitingreservationservice.entity.Spot;
+import com.example.waitingreservationservice.repository.SpotRepository;
+import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 @SpringBootTest

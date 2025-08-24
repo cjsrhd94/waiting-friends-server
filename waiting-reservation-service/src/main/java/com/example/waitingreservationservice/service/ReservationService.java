@@ -1,17 +1,18 @@
 package com.example.waitingreservationservice.service;
 
-import com.example.waitingreservationservice.client.SpotFeignClient;
 import com.example.waitingreservationservice.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.RedisUtil;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
-import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
+import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.ReservationRepository;
 
+import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.ReservationReader;
+import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,8 @@ import java.util.stream.Collectors;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationReader reservationReader;
-    private final SpotFeignClient spotFeignClient;
+    private final SpotRepository spotRepository;
+    private final SpotReader spotReader;
     private final RedisUtil redisUtil;
 
     private final static String SPOT_CACHE_KEY = "spot:";
@@ -36,14 +38,16 @@ public class ReservationService {
             String phoneNumber,
             Integer headCount
     ) {
-        if (!spotFeignClient.canWaiting(spotId)) {
+        Spot spot = spotReader.findById(spotId);
+
+        if (!spot.canWait()) {
             throw new EnterNotAllowException("현재 입장할 수 없는 상태입니다.");
         }
 
         Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
         Long reservationId =  reservationRepository.save(reservation).getId();
 
-        spotFeignClient.decreaseRemainingCapacity(spotId, new SpotRemainingCapacityRequest(headCount));
+        spot.decreaseRemainingCapacity(headCount);
 
         return reservationId;
     }
@@ -58,10 +62,8 @@ public class ReservationService {
         reservation.updateStatus(request.getStatus());
 
         if (reservation.isCancelled()) {
-            spotFeignClient.increaseRemainingCapacity(
-                    reservation.getSpotId(),
-                    new SpotRemainingCapacityRequest(reservation.getHeadCount())
-            );
+            Spot spot = spotReader.findById(reservation.getSpotId());
+            spot.increaseRemainingCapacity(reservation.getHeadCount());
         }
 
         redisUtil.remove(SPOT_CACHE_KEY, 0, reservation.toString());

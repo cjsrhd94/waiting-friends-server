@@ -1,4 +1,4 @@
-package com.example.waitingspotservice.dto.response;
+package com.example.waitingreservationservice.dto.response;
 
 import lombok.Data;
 

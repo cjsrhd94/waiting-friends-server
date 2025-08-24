@@ -1,7 +1,7 @@
-package com.example.waitingspotservice.entity;
+package com.example.waitingreservationservice.entity;
 
-import com.example.waitingspotservice.common.exception.InvalidSpotStatusException;
-import com.example.waitingspotservice.common.exception.NotEnoughCapacityException;
+import com.example.waitingreservationservice.common.exception.InvalidSpotStatusException;
+import com.example.waitingreservationservice.common.exception.NotEnoughCapacityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
