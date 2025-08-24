@@ -49,7 +49,7 @@ public class Spot {
 
         public Status findByName(String name) {
             return Arrays.stream(Status.values())
-                    .filter(s -> s.name().equals(name))
+                    .filter(s -> s.name().equalsIgnoreCase(name))
                     .findFirst()
                     .orElseThrow(() -> new InvalidSpotStatusException("유효하지 않은 영업 상태입니다: " + name));
         }
@@ -82,11 +82,11 @@ public class Spot {
             );
         }
 
-        this.remainingCapacity = this.remainingCapacity - headCount;
+        this.remainingCapacity -= headCount;
     }
 
     public void increaseRemainingCapacity(Integer headCount) {
-        this.remainingCapacity = this.remainingCapacity + headCount;
+        this.remainingCapacity += headCount;
     }
 
     public void updateStatus(String status) {

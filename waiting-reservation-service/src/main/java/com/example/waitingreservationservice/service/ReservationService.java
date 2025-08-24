@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationReader reservationReader;
-    private final SpotRepository spotRepository;
     private final SpotReader spotReader;
     private final RedisUtil redisUtil;
 
