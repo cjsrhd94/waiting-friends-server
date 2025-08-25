@@ -25,6 +25,12 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Void> reserve(@RequestBody ReservationCreateRequest request) {
+        reservationService.reserve(request.getSpotId(), request.getPhoneNumber(), request.getHeadCount());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/kafka")
+    public ResponseEntity<Void> reserveByKafka(@RequestBody ReservationCreateRequest request) {
         reservationProducer.produceReservationEvent(request);
         return ResponseEntity.ok().build();
     }
