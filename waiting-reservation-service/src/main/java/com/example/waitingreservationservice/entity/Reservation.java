@@ -20,9 +20,6 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "spot_id", nullable = false)
-    private Long spotId;
-
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
@@ -31,10 +28,13 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private ReservationStatus status;
+    private Status status;
 
     @Column(name = "reservation_date", nullable = false)
     private LocalDateTime reservationDate;
+
+    @Column(name = "spot_id", nullable = false)
+    private Long spotId;
 
     public Reservation(
             Long spotId,
@@ -47,11 +47,11 @@ public class Reservation {
         this.spotId = spotId;
         this.phoneNumber = phoneNumber;
         this.headCount = headCount;
-        this.status = ReservationStatus.WAITING; // 초기 상태는 대기 중
+        this.status = Status.WAITING; // 초기 상태는 대기 중
         this.reservationDate = LocalDateTime.now(); // 예약 날짜는 현재 시간으로 설정
     }
 
-    public enum ReservationStatus {
+    public enum Status {
         WAITING("WA1", "대기중"),
         CALLING("CA1", "호출 완료"),
         COMPLETED("CO1", "입장 완료"),
@@ -60,13 +60,13 @@ public class Reservation {
         private final String code;
         private final String description;
 
-        ReservationStatus(String code, String description) {
+        Status(String code, String description) {
             this.code = code;
             this.description = description;
         }
 
-        public ReservationStatus findByName(String name) {
-            return Arrays.stream(ReservationStatus.values())
+        public Status findByName(String name) {
+            return Arrays.stream(Status.values())
                     .filter(rs -> rs.name().equals(name))
                     .findFirst()
                     .orElseThrow(() -> new InvalidReservationStatusException("유효하지 않은 예약 상태입니다: " + name));
@@ -88,12 +88,21 @@ public class Reservation {
         }
     }
 
-    public ReservationStatus updateStatus(String statusName) {
-        this.status = this.status.findByName(statusName);
-        return status;
+    public void updateStatus(String statusName) {
+        Status status = this.status.findByName(statusName);
+
+        if (status == this.status) {
+            throw new InvalidReservationStatusException("현재 상태와 동일한 상태로 변경할 수 없습니다: " + statusName);
+        }
+
+        if (status == Status.WAITING) {
+            throw new InvalidReservationStatusException("예약 상태를 WAITING으로 변경할 수 없습니다.");
+        }
+
+        this.status = status;
     }
 
     public Boolean isCancelled() {
-        return this.status == ReservationStatus.CANCELLED;
+        return this.status == Status.CANCELLED;
     }
 }

@@ -28,7 +28,7 @@ class ReservationServiceTest {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private  ReservationService reservationService;
+    private ReservationService reservationService;
 
     @AfterEach
     void tearDown() {

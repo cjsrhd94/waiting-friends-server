@@ -10,7 +10,6 @@ import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.ReservationRepository;
 
-import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.ReservationReader;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class ReservationService {
     private final static String SPOT_CACHE_KEY = "spot:";
 
     @Transactional
-    @DistributedLock(key = "#spotId")
+    @DistributedLock(key = "'spot-'.concat(#spotId)")
     public Long reserve(
             Long spotId,
             String phoneNumber,
@@ -52,7 +51,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public void updateReservationStatus(
+    @DistributedLock(key = "'spot-'.concat(#spotId)")
+    public void updateStatus(
             Long reservationId,
             ReservationUpdateRequest request
     ) {
@@ -93,7 +93,7 @@ public class ReservationService {
 
         List<Long> waitingIds = reservationReader.getReservationBySpotIdAndStatus(
                         spotId,
-                        Reservation.ReservationStatus.WAITING
+                        Reservation.Status.WAITING
                 ).stream()
                 .map(Reservation::getId)
                 .collect(Collectors.toList());

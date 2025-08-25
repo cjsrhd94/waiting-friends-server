@@ -30,11 +30,11 @@ public class ReservationController {
     }
 
     @PutMapping("/{reservationId}/status")
-    public ResponseEntity<Void> updateReservationStatus(
+    public ResponseEntity<Void> updateStatus(
             @PathVariable Long reservationId,
             @RequestBody ReservationUpdateRequest request
     ) {
-        reservationService.updateReservationStatus(reservationId, request);
+        reservationService.updateStatus(reservationId, request);
         return ResponseEntity.ok().build();
     }
 
