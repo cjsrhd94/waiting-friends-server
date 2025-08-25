@@ -21,7 +21,7 @@ public class ReservationConsumer {
     private final RedisUtil redisUtil;
 
     @KafkaListener(topics = "reservation", containerFactory = "kafkaListenerContainerFactory")
-    @DistributedLock(key = "#spotId")
+    @DistributedLock(key = "'spot-'.concat(#spotId)")
     public Long reserve(ConsumerRecord<String, ReservationCreateRequest> record) {
         ReservationCreateRequest payload = record.value();
 
@@ -36,7 +36,7 @@ public class ReservationConsumer {
 
         spot.decreaseRemainingCapacity(payload.getHeadCount());
 
-        redisUtil.rPush("spot:"+ payload.getSpotId(), reservationId.toString());
+        redisUtil.addZSet("spot::"+ payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
 
         return reservationId;
     }

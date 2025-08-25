@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +26,7 @@ public class ReservationService {
     private final SpotReader spotReader;
     private final RedisUtil redisUtil;
 
-    private final static String SPOT_CACHE_KEY = "spot:";
+    private final static String SPOT_CACHE_KEY = "spot::";
 
     @Transactional
     @DistributedLock(key = "'spot-'.concat(#spotId)")
@@ -43,9 +42,11 @@ public class ReservationService {
         }
 
         Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
-        Long reservationId =  reservationRepository.save(reservation).getId();
+        Long reservationId = reservationRepository.save(reservation).getId();
 
         spot.decreaseRemainingCapacity(headCount);
+
+        redisUtil.addZSet(SPOT_CACHE_KEY + spotId, reservationId.toString(), System.currentTimeMillis());
 
         return reservationId;
     }
@@ -65,7 +66,7 @@ public class ReservationService {
             spot.increaseRemainingCapacity(reservation.getHeadCount());
         }
 
-        redisUtil.remove(SPOT_CACHE_KEY, 0, reservation.toString());
+        redisUtil.removeZSet(SPOT_CACHE_KEY + reservation.getSpotId(), reservationId.toString());
     }
 
     @Transactional(readOnly = true)
@@ -84,26 +85,18 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public Long getWaitingOrder(Long reservationId, Long spotId) {
-        List<String> waitingIdsInRedis = redisUtil.getList(SPOT_CACHE_KEY + spotId, 0, -1);
-        for (int i = 0; i < waitingIdsInRedis.size(); i++) {
-            if (waitingIdsInRedis.get(i).equals(String.valueOf(reservationId))) {
-                return (long) (i + 1);
-            }
+        Long cacheOrder = redisUtil.getZRank(SPOT_CACHE_KEY + spotId, String.valueOf(reservationId));
+
+        if (cacheOrder != null) {
+            return cacheOrder + 1;
         }
 
-        List<Long> waitingIds = reservationReader.getReservationBySpotIdAndStatus(
-                        spotId,
-                        Reservation.Status.WAITING
-                ).stream()
+        return reservationReader.getReservationBySpotIdAndStatus(spotId, Reservation.Status.WAITING)
+                .stream()
                 .map(Reservation::getId)
-                .collect(Collectors.toList());
-
-        for (int i = 0; i < waitingIds.size(); i++) {
-            if (waitingIds.get(i).equals(reservationId)) {
-                return (long) (i + 1);
-            }
-        }
-
-        throw new InvalidReservationStatusException("해당 예약은 대기 상태가 아닙니다.");
+                .filter(i -> i.equals(reservationId))
+                .findFirst()
+                .orElseThrow(() -> new InvalidReservationStatusException("해당 예약은 대기 상태가 아닙니다."))
+                + 1L;
     }
 }
