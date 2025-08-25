@@ -29,7 +29,7 @@ public class ReservationService {
     private final static String SPOT_CACHE_KEY = "spot::";
 
     @Transactional
-    @DistributedLock(key = "'spot-'.concat(#spotId)")
+    @DistributedLock(key = "'spot-' + #spotId")
     public Long reserve(
             Long spotId,
             String phoneNumber,
@@ -52,7 +52,7 @@ public class ReservationService {
     }
 
     @Transactional
-    @DistributedLock(key = "'spot-'.concat(#spotId)")
+    @DistributedLock(key = "'spot-' + #spotId")
     public void updateStatus(
             Long reservationId,
             ReservationUpdateRequest request

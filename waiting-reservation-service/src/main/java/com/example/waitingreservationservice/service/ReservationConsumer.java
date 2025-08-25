@@ -21,7 +21,7 @@ public class ReservationConsumer {
     private final RedisUtil redisUtil;
 
     @KafkaListener(topics = "reservation", containerFactory = "kafkaListenerContainerFactory")
-    @DistributedLock(key = "'spot-'.concat(#spotId)")
+    @DistributedLock(key = "'spot-' + #spotId")
     public Long reserve(ConsumerRecord<String, ReservationCreateRequest> record) {
         ReservationCreateRequest payload = record.value();
 
