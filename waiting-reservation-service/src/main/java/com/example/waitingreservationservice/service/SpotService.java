@@ -5,6 +5,7 @@ import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRe
 import com.example.waitingreservationservice.dto.request.StatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.entity.Spot;
+import com.example.waitingreservationservice.repository.JdbcSpotRepository;
 import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
 import jakarta.persistence.OptimisticLockException;
@@ -16,11 +17,15 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SpotService {
     private final SpotRepository spotRepository;
     private final SpotReader spotReader;
+
+    private final JdbcSpotRepository jdbcSpotRepository;
 
     @Transactional
     public Long createSpot(Long userId, SpotCreateRequest request) {
@@ -76,5 +81,26 @@ public class SpotService {
     public void updateSpotStatus(Long spotId, StatusUpdateRequest request) {
         Spot spot = spotReader.findById(spotId);
         spot.updateStatus(request.getStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SpotResponse> getSpotsBySearch(String address) {
+        return spotReader.findSpotsBySearch(address).stream()
+                .map(
+                        s -> new SpotResponse(
+                                s.getId(),
+                                s.getName(),
+                                s.getAddress(),
+                                s.getMaxCapacity(),
+                                s.getRemainingCapacity(),
+                                s.getStatus().name()
+                        )
+                ).toList();
+    }
+
+    @Transactional
+    public void bulkInsertDummySpots(Integer num) {
+        jdbcSpotRepository.bulkInsertSpots(num);
+        return;
     }
 }

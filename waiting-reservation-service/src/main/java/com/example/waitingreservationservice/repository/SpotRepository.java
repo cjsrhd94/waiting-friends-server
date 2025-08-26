@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,4 +24,7 @@ public interface SpotRepository extends JpaRepository<Spot, Long> {
     @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "1000")})
     @Query("SELECT s FROM Spot s WHERE s.id = :spotId")
     Optional<Spot> findByIdForUpdate(Long spotId);
+
+    @Query("SELECT s FROM Spot s WHERE s.address LIKE %:address%")
+    List<Spot> findSpotsBySearch(String address);
 }

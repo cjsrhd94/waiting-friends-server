@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,5 +29,9 @@ public class SpotReader {
     public Spot findByIdForUpdate(Long spotId) {
         return spotRepository.findByIdForUpdate(spotId)
                 .orElseThrow(() -> new SpotNotFoundException(spotId + " : 해당 스팟이 존재하지 않습니다."));
+    }
+
+    public List<Spot> findSpotsBySearch(String address) {
+        return spotRepository.findSpotsBySearch(address);
     }
 }
