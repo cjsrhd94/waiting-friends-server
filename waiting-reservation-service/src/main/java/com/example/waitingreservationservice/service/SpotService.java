@@ -99,8 +99,7 @@ public class SpotService {
     }
 
     @Transactional
-    public void bulkInsertDummySpots(Integer num) {
+    public void bulkInsertDummySpots(Integer num) throws InterruptedException{
         jdbcSpotRepository.bulkInsertSpots(num);
-        return;
     }
 }

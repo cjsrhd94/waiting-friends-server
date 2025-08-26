@@ -56,7 +56,7 @@ public class SpotController {
     }
 
     @PostMapping("/dummy")
-    public ResponseEntity<Void> bulkInsertDummySpots(@RequestParam Integer num) {
+    public ResponseEntity<Void> bulkInsertDummySpots(@RequestParam Integer num) throws  InterruptedException {
         spotService.bulkInsertDummySpots(num);
         return ResponseEntity.ok().build();
     }
