@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/reservations")
+@RequestMapping("/api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
     private final ReservationProducer reservationProducer;
@@ -47,11 +45,6 @@ public class ReservationController {
     @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.getReservation(reservationId));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservationsBySpot(@RequestParam Long spotId) {
-        return ResponseEntity.ok(reservationService.getReservationsBySpot(spotId));
     }
 
     @GetMapping("/{reservationId}/order")

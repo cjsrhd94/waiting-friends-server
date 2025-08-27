@@ -84,16 +84,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return value;
     }
 
-    public String getEmail(String token) {
-        return parsePayload(token)
-                .get("email", String.class);
-    }
-
-    public String getRole(String token) {
-        return parsePayload(token)
-                .get("role", String.class);
-    }
-
     private Claims parsePayload(String token) {
         return Jwts.parser()
                 .verifyWith(generateSecretKey())

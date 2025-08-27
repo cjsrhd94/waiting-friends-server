@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -45,10 +45,5 @@ public class UserController {
     ) {
         userService.logout(userDetails,request);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<UserResponse> getUser(@RequestParam("email") String email) {
-        return ResponseEntity.ok(userService.getUser(email));
     }
 }

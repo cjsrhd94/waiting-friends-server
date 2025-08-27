@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import static com.example.waitingreservationservice.common.util.RedisUtil.SPOT_CACHE_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +25,6 @@ public class ReservationService {
     private final ReservationReader reservationReader;
     private final SpotReader spotReader;
     private final RedisUtil redisUtil;
-
-    private final static String SPOT_CACHE_KEY = "spot::";
 
     @Transactional
     @DistributedLock(key = "'spot-' + #spotId")
@@ -73,14 +71,6 @@ public class ReservationService {
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationReader.findById(reservationId);
         return new ReservationResponse(reservation);
-    }
-
-    @Transactional(readOnly = true)
-    public List<ReservationResponse> getReservationsBySpot(Long spotId) {
-        List<Reservation> reservations = reservationReader.getReservationsBySpotId(spotId);
-        return reservations.stream()
-                .map(ReservationResponse::new)
-                .toList();
     }
 
     @Transactional(readOnly = true)

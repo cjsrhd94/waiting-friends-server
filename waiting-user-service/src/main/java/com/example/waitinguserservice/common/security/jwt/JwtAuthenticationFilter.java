@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.redisUtil = redisUtil;
-        setFilterProcessesUrl("/api/v1/users/login");
+        setFilterProcessesUrl("/api/users/login");
     }
 
     public Authentication attemptAuthentication(

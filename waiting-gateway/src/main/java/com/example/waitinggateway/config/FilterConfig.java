@@ -21,11 +21,11 @@ public class FilterConfig {
                 // user-service
                 .route("user-service",
                         r -> r.path(
-                                        "/api/v1/users/health",
-                                        "/api/v1/users/login",
-                                        "/api/v1/users/sign-up",
-                                        "/api/v1/users/reissue",
-                                        "/api/v1/users/logout"
+                                        "/api/users/health",
+                                        "/api/users/login",
+                                        "/api/users/sign-up",
+                                        "/api/users/reissue",
+                                        "/api/users/logout"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
@@ -37,7 +37,7 @@ public class FilterConfig {
 
                 .route("user-service",
                         r -> r.path(
-                                        "/api/v1/users/**"
+                                        "/api/users/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
@@ -51,7 +51,7 @@ public class FilterConfig {
                 // reservation-service
                 .route("reservation-service",
                         r -> r.path(
-                                        "/api/v1/reservations/**"
+                                        "/api/reservations/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
@@ -61,11 +61,23 @@ public class FilterConfig {
                                 .uri("lb://reservation-service")
                 )
 
+                .route("reservation-service",
+                        r -> r.path(
+                                        "/admin/reservations/**"
+                                )
+                                .filters(f -> f
+                                        .removeRequestHeader("Cookie")
+                                        .rewritePath("/reservation-service/(?<segment>.*)", "/${segment}")
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
+                                )
+                                .uri("lb://reservation-service")
+                )
+
                 // spot-service
                 .route("spot-service",
                         r -> r.path(
-                                        "/api/v1/spots/*/status",
-                                        "/api/v1/spots/*/capacity/*"
+                                        "/api/spots/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
@@ -77,13 +89,13 @@ public class FilterConfig {
 
                 .route("spot-service",
                         r -> r.path(
-                                        "/api/v1/spots/**"
+                                        "/admin/spots/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader("Cookie")
                                         .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
-                                        .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                         .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                 )
                                 .uri("lb://spot-service")
                 )

@@ -13,6 +13,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import static com.example.waitingreservationservice.common.util.RedisUtil.SPOT_CACHE_KEY;
+
 @Component
 @RequiredArgsConstructor
 public class ReservationConsumer {
@@ -36,7 +38,7 @@ public class ReservationConsumer {
 
         spot.decreaseRemainingCapacity(payload.getHeadCount());
 
-        redisUtil.addZSet("spot::"+ payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
+        redisUtil.addZSet(SPOT_CACHE_KEY+ payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
 
         return reservationId;
     }
