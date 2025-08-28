@@ -39,7 +39,7 @@ public class ReservationService {
             throw new EnterNotAllowException("현재 입장할 수 없는 상태입니다.");
         }
 
-        Reservation reservation = new Reservation(spotId, phoneNumber, headCount);
+        Reservation reservation = new Reservation(spotId, spot.getName(), phoneNumber, headCount);
         Long reservationId = reservationRepository.save(reservation).getId();
 
         spot.decreaseRemainingCapacity(headCount);

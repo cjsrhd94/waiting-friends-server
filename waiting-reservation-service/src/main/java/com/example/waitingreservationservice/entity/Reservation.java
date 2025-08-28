@@ -36,8 +36,12 @@ public class Reservation {
     @Column(name = "spot_id", nullable = false)
     private Long spotId;
 
+    @Column(name = "spot_name", nullable = false)
+    private String spotName;
+
     public Reservation(
             Long spotId,
+            String spotName,
             String phoneNumber,
             Integer headCount
     ) {
@@ -45,6 +49,7 @@ public class Reservation {
         isOverHeadCount(headCount);
 
         this.spotId = spotId;
+        this.spotName = spotName;
         this.phoneNumber = phoneNumber;
         this.headCount = headCount;
         this.status = Status.WAITING; // 초기 상태는 대기 중
