@@ -46,7 +46,7 @@ public class AdminReservationService {
     public List<ReservationResponse> getReservationsBySpot(Long spotId) {
         List<Reservation> reservations = reservationReader.getReservationsBySpotId(spotId);
         return reservations.stream()
-                .map(ReservationResponse::new)
+                .map(ReservationResponse::from)
                 .toList();
     }
 }

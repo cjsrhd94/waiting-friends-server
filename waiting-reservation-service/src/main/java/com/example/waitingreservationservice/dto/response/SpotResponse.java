@@ -1,8 +1,13 @@
 package com.example.waitingreservationservice.dto.response;
 
+import com.example.waitingreservationservice.entity.Spot;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SpotResponse {
     private Long id;
     private String name;
@@ -25,5 +30,16 @@ public class SpotResponse {
         this.maxCapacity = maxCapacity;
         this.remainingCapacity = remainingCapacity;
         this.status = status;
+    }
+
+    public static SpotResponse from(Spot spot) {
+        return new SpotResponse(
+                spot.getId(),
+                spot.getName(),
+                spot.getAddress(),
+                spot.getMaxCapacity(),
+                spot.getRemainingCapacity(),
+                spot.getStatus().name()
+        );
     }
 }

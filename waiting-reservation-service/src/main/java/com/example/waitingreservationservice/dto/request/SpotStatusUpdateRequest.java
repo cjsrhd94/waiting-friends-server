@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationUpdateRequest {
+public class SpotStatusUpdateRequest {
     private String status;
 
-    public ReservationUpdateRequest(String status) {
+    public SpotStatusUpdateRequest(String status) {
         this.status = status;
     }
 
-    public static ReservationUpdateRequest of (String status) {
-        return new ReservationUpdateRequest(status);
+    public static SpotStatusUpdateRequest of (String status) {
+        return new SpotStatusUpdateRequest(status);
     }
 }

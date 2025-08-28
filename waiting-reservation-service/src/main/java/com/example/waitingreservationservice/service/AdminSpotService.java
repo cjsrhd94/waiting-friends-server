@@ -1,7 +1,7 @@
 package com.example.waitingreservationservice.service;
 
 import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
-import com.example.waitingreservationservice.dto.request.StatusUpdateRequest;
+import com.example.waitingreservationservice.dto.request.SpotStatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.JdbcSpotRepository;
@@ -35,7 +35,7 @@ public class AdminSpotService {
     }
 
     @Transactional
-    public void updateSpotStatus(Long spotId, StatusUpdateRequest request) {
+    public void updateSpotStatus(Long spotId, SpotStatusUpdateRequest request) {
         Spot spot = spotReader.findById(spotId);
         spot.updateStatus(request.getStatus());
     }
@@ -44,29 +44,14 @@ public class AdminSpotService {
     public SpotResponse getSpot(Long userId, Long spotId) {
         Spot spot = spotReader.findById(spotId);
 
-        return new SpotResponse(
-                spot.getId(),
-                spot.getName(),
-                spot.getAddress(),
-                spot.getMaxCapacity(),
-                spot.getRemainingCapacity(),
-                spot.getStatus().name()
-        );
+        return SpotResponse.from(spot);
     }
 
     @Transactional(readOnly = true)
     public List<SpotResponse> getSpotsBySearch(String address) {
         return spotReader.findSpotsBySearch(address).stream()
-                .map(
-                        s -> new SpotResponse(
-                                s.getId(),
-                                s.getName(),
-                                s.getAddress(),
-                                s.getMaxCapacity(),
-                                s.getRemainingCapacity(),
-                                s.getStatus().name()
-                        )
-                ).toList();
+                .map(SpotResponse::from)
+                .toList();
     }
 
     @Transactional

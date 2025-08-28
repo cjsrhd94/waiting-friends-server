@@ -1,7 +1,6 @@
 package com.example.waitingreservationservice.service;
 
 
-import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
 import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
@@ -49,7 +48,7 @@ class SpotServiceTest {
             executorService.execute(() -> {
                 try {
                     spotService.decreaseRemainingCapacityWithOptimisticLock(
-                            spotId, new SpotRemainingCapacityRequest(1)
+                            spotId, 1
                     );
                 } finally {
                     latch.countDown();
@@ -78,7 +77,7 @@ class SpotServiceTest {
             executorService.execute(() -> {
                 try {
                     spotService.decreaseRemainingCapacityWithPessimisticLock(
-                            spotId, new SpotRemainingCapacityRequest(1)
+                            spotId, 1
                     );
                 } finally {
                     latch.countDown();

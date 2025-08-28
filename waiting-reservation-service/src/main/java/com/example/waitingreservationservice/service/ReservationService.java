@@ -70,7 +70,7 @@ public class ReservationService {
     @Transactional(readOnly = true)
     public ReservationResponse getReservation(Long reservationId) {
         Reservation reservation = reservationReader.findById(reservationId);
-        return new ReservationResponse(reservation);
+        return ReservationResponse.from(reservation);
     }
 
     @Transactional(readOnly = true)

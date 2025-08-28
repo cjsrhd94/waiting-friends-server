@@ -1,11 +1,7 @@
 package com.example.waitingreservationservice.service;
 
-import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
-import com.example.waitingreservationservice.dto.request.SpotRemainingCapacityRequest;
-import com.example.waitingreservationservice.dto.request.StatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.entity.Spot;
-import com.example.waitingreservationservice.repository.JdbcSpotRepository;
 import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
 import jakarta.persistence.OptimisticLockException;
@@ -16,8 +12,6 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,16 +29,16 @@ public class SpotService {
             maxAttempts = 5,
             backoff = @Backoff(delay = 1000)
     )
-    public void decreaseRemainingCapacityWithOptimisticLock(Long spotId, SpotRemainingCapacityRequest request) {
+    public void decreaseRemainingCapacityWithOptimisticLock(Long spotId, Integer headCount) {
         Spot spot = spotReader.findByIdForOptimistic(spotId);
-        spot.decreaseRemainingCapacity(request.getHeadCount());
+        spot.decreaseRemainingCapacity(headCount);
         spotRepository.save(spot);
     }
 
     @Transactional
-    public void decreaseRemainingCapacityWithPessimisticLock(Long spotId, SpotRemainingCapacityRequest request) {
+    public void decreaseRemainingCapacityWithPessimisticLock(Long spotId, Integer headCount) {
         Spot spot = spotReader.findByIdForUpdate(spotId);
-        spot.decreaseRemainingCapacity(request.getHeadCount());
+        spot.decreaseRemainingCapacity(headCount);
         spotRepository.save(spot);
     }
 
@@ -52,13 +46,6 @@ public class SpotService {
     public SpotResponse getSpot(Long spotId) {
         Spot spot = spotReader.findById(spotId);
 
-        return new SpotResponse(
-                spot.getId(),
-                spot.getName(),
-                spot.getAddress(),
-                spot.getMaxCapacity(),
-                spot.getRemainingCapacity(),
-                spot.getStatus().name()
-        );
+        return SpotResponse.from(spot);
     }
 }

@@ -1,7 +1,7 @@
 package com.example.waitingreservationservice.controller;
 
 import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
-import com.example.waitingreservationservice.dto.request.StatusUpdateRequest;
+import com.example.waitingreservationservice.dto.request.SpotStatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.service.AdminSpotService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class AdminSpotController {
     @PutMapping("/{spotId}/status")
     public ResponseEntity<Void> updateSpotStatus(
             @PathVariable Long spotId,
-            @RequestBody StatusUpdateRequest request
+            @RequestBody SpotStatusUpdateRequest request
     ) {
         adminSpotService.updateSpotStatus(spotId, request);
         return ResponseEntity.ok().build();
