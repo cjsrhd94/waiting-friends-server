@@ -30,6 +30,7 @@ services:
       - "29092:29092"
     environment:
       KAFKA_NODE_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
       KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:29092'
@@ -41,6 +42,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       CLUSTER_ID: 'ciWo7IWazngRchmPES6q5A=='
       KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+    depends_on:
+      - zookeeper
 
   kafka-ui:
     image: provectuslabs/kafka-ui
