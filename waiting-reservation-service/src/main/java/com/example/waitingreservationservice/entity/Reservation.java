@@ -102,6 +102,10 @@ public class Reservation {
         this.status = status;
     }
 
+    public void cancel() {
+        this.status = Status.CANCELLED;
+    }
+
     public Boolean isCancelled() {
         return this.status == Status.CANCELLED;
     }

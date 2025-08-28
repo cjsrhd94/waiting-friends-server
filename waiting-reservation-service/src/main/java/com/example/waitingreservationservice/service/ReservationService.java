@@ -51,18 +51,12 @@ public class ReservationService {
 
     @Transactional
     @DistributedLock(key = "'spot-' + #spotId")
-    public void updateStatus(
-            Long reservationId,
-            ReservationUpdateRequest request
-    ) {
+    public void cancel(Long reservationId) {
         Reservation reservation = reservationReader.findById(reservationId);
+        reservation.cancel();
 
-        reservation.updateStatus(request.getStatus());
-
-        if (reservation.isCancelled()) {
-            Spot spot = spotReader.findById(reservation.getSpotId());
-            spot.increaseRemainingCapacity(reservation.getHeadCount());
-        }
+        Spot spot = spotReader.findById(reservation.getSpotId());
+        spot.increaseRemainingCapacity(reservation.getHeadCount());
 
         redisUtil.removeZSet(SPOT_CACHE_KEY + reservation.getSpotId(), reservationId.toString());
     }

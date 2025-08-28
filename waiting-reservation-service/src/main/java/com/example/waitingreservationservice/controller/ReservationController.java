@@ -1,7 +1,6 @@
 package com.example.waitingreservationservice.controller;
 
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
-import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.service.ReservationProducer;
 import com.example.waitingreservationservice.service.ReservationService;
@@ -28,17 +27,16 @@ public class ReservationController {
     }
 
     @PostMapping("/kafka")
-    public ResponseEntity<Void> reserveByKafka(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<Void> reserveWithKafka(@RequestBody ReservationCreateRequest request) {
         reservationProducer.produceReservationEvent(request);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{reservationId}/status")
-    public ResponseEntity<Void> updateStatus(
-            @PathVariable Long reservationId,
-            @RequestBody ReservationUpdateRequest request
+    @PutMapping("/{reservationId}/status/cancel")
+    public ResponseEntity<Void> cancel(
+            @PathVariable Long reservationId
     ) {
-        reservationService.updateStatus(reservationId, request);
+        reservationService.cancel(reservationId);
         return ResponseEntity.ok().build();
     }
 
