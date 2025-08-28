@@ -4,7 +4,7 @@ import com.example.waitingreservationservice.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.RedisUtil;
-import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
+import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
@@ -68,19 +68,20 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public Long getWaitingOrder(Long reservationId, Long spotId) {
+    public ReservationOrderResponse getWaitingOrder(Long reservationId, Long spotId) {
         Long cacheOrder = redisUtil.getZRank(SPOT_CACHE_KEY + spotId, String.valueOf(reservationId));
 
         if (cacheOrder != null) {
-            return cacheOrder + 1;
+            return ReservationOrderResponse.of((int) (cacheOrder + 1));
         }
 
-        return reservationReader.getReservationBySpotIdAndStatus(spotId, Reservation.Status.WAITING)
+        Long order = reservationReader.getReservationBySpotIdAndStatus(spotId, Reservation.Status.WAITING)
                 .stream()
                 .map(Reservation::getId)
                 .filter(i -> i.equals(reservationId))
                 .findFirst()
-                .orElseThrow(() -> new InvalidReservationStatusException("해당 예약은 대기 상태가 아닙니다."))
-                + 1L;
+                .orElseThrow(() -> new InvalidReservationStatusException("해당 예약은 대기 상태가 아닙니다."));
+
+        return ReservationOrderResponse.of((int) (order + 1));
     }
 }

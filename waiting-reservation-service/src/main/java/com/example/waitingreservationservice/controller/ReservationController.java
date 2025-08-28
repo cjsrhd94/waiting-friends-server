@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.controller;
 
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
+import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.service.ReservationProducer;
 import com.example.waitingreservationservice.service.ReservationService;
@@ -46,7 +47,7 @@ public class ReservationController {
     }
 
     @GetMapping("/{reservationId}/order")
-    public ResponseEntity<Long> getWaitingOrder(
+    public ResponseEntity<ReservationOrderResponse> getWaitingOrder(
             @PathVariable Long reservationId,
             @RequestParam Long spotId
     ) {
