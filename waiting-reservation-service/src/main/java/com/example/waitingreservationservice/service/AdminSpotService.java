@@ -4,7 +4,6 @@ import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
 import com.example.waitingreservationservice.dto.request.SpotStatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.entity.Spot;
-import com.example.waitingreservationservice.repository.JdbcSpotRepository;
 import com.example.waitingreservationservice.repository.SpotRepository;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 public class AdminSpotService {
     private final SpotRepository spotRepository;
     private final SpotReader spotReader;
-    private final JdbcSpotRepository jdbcSpotRepository;
 
 
     @Transactional
@@ -52,10 +50,5 @@ public class AdminSpotService {
         return spotReader.findSpotsBySearch(address).stream()
                 .map(SpotResponse::from)
                 .toList();
-    }
-
-    @Transactional
-    public void bulkInsertDummySpots(Integer num) throws InterruptedException{
-        jdbcSpotRepository.bulkInsertSpots(num);
     }
 }

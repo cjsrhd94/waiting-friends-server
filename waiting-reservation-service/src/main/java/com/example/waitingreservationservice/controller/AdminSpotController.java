@@ -47,10 +47,4 @@ public class AdminSpotController {
     ) {
         return ResponseEntity.ok(adminSpotService.getSpotsBySearch(address));
     }
-
-    @PostMapping("/dummy")
-    public ResponseEntity<Void> bulkInsertDummySpots(@RequestParam Integer num) throws  InterruptedException {
-        adminSpotService.bulkInsertDummySpots(num);
-        return ResponseEntity.ok().build();
-    }
 }
