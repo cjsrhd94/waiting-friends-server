@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class RedisUtil {
     private final StringRedisTemplate redisTemplate;
 
-    public final static String SPOT_CACHE_KEY = "spot::";
+    public static final String SPOT_CACHE_KEY = "spot::";
 
     public Long getZRank(String key, String value) {
         return redisTemplate.opsForZSet().rank(key, value);

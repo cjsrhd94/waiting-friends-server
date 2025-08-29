@@ -2,7 +2,6 @@ package com.example.waitingreservationservice.dto.response;
 
 import com.example.waitingreservationservice.entity.Spot;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

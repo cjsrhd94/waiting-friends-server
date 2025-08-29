@@ -4,7 +4,6 @@ import com.example.waitinguserservice.common.security.jwt.JwtTokenResponse;
 import com.example.waitinguserservice.dto.request.LogoutRequest;
 import com.example.waitinguserservice.dto.request.ReissueRequest;
 import com.example.waitinguserservice.dto.request.SignUpRequest;
-import com.example.waitinguserservice.dto.response.UserResponse;
 import com.example.waitinguserservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

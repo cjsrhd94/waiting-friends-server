@@ -23,7 +23,7 @@ public class SignUpValidator {
             throw new EmailNotEmptyException();
         }
 
-        if (userRepository.existsByEmail(email)) {
+        if (equals(userRepository.existsByEmail(email))) {
             throw new AlreadyExistEmailException("이미 사용중인 이메일입니다: " + email);
         }
     }
@@ -37,7 +37,7 @@ public class SignUpValidator {
             throw new InvalidPasswordFormatException("비밀번호는 8자 이상 20자 이하로 입력해야 합니다.");
         }
 
-        if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*[0-9].*")) {
+        if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*\\d.*")) {
             throw new InvalidPasswordFormatException("비밀번호는 영문자와 숫자를 모두 포함해야 합니다.");
         }
     }

@@ -3,7 +3,6 @@ package com.example.waitinguserservice.repository.reader;
 import com.example.waitinguserservice.common.exception.UserNotFoundException;
 import com.example.waitinguserservice.entity.User;
 import com.example.waitinguserservice.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

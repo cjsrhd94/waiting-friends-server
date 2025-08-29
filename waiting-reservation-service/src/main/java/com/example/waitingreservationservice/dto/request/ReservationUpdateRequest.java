@@ -1,7 +1,6 @@
 package com.example.waitingreservationservice.dto.request;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
