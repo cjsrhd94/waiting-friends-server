@@ -45,6 +45,8 @@ dependencies {
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'com.github.loki4j:loki-logback-appender:1.6.0'
 
+	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+
 	// dummy
 	implementation 'org.springframework:spring-jdbc:7.0.0-M8'
 	implementation 'net.datafaker:datafaker:2.4.4'

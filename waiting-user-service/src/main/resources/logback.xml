@@ -2,7 +2,7 @@
     <!-- 콘솔 로그 설정 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level--- [%thread] %logger{36} - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%X{traceId}] [%logger{36}] - %msg%n</pattern>
         </encoder>
     </appender>
     <!-- Loki4j 로그 설정 -->
@@ -15,7 +15,7 @@
                 <pattern>app=waiting-friends,service=user-service,level=%level</pattern>
             </label>
             <message>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level--- [%thread] %logger{36} - %msg%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%X{traceId}] [%logger{36}] - %msg%n</pattern>
             </message>
         </format>
     </appender>
