@@ -25,8 +25,8 @@ class AdminSpotServiceTest {
 
     private final Faker faker = new Faker(new Locale("ko"));
 
-    private static final Integer INSERT_NUM = 100_000;
-    private static final int BATCH_SIZE = 1_000; // 배치 크기
+    private static final Integer INSERT_NUM = 10_000_000;
+    private static final int BATCH_SIZE = 5_000; // 배치 크기
     private static final int THREAD_POOL_SIZE = 4; // CPU 코어 수 기반 스레드 풀
 
     @Autowired
