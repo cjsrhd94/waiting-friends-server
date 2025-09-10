@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.common.config;
 
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
+import com.example.waitingreservationservice.dto.request.ReservationWaitingRequest;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,23 @@ public class KafkaProducerConfig {
     }
 
     @Bean
+    public ProducerFactory<String, ReservationWaitingRequest> waitingProducerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
+        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
     public KafkaTemplate<String, ReservationCreateRequest> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
+
+    @Bean
+    public KafkaTemplate<String, ReservationWaitingRequest> waitingKafkaTemplate() {
+        return new KafkaTemplate<>(waitingProducerFactory());
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.CacheKey;
+import com.example.waitingreservationservice.dto.request.ReservationWaitingRequest;
 import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -23,7 +24,9 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationReader reservationReader;
     private final SpotReader spotReader;
+
     private final RedisUtil redisUtil;
+    private final ReservationProducer reservationProducer;
 
     @Transactional
     @DistributedLock(key = "'spot-' + #spotId")
@@ -44,6 +47,8 @@ public class ReservationService {
         spot.decreaseRemainingCapacity(headCount);
 
         redisUtil.addZSet(CacheKey.SPOT.getKey() + spotId, reservationId.toString(), System.currentTimeMillis());
+
+        reservationProducer.produceWaitingEvent(new ReservationWaitingRequest(spot, reservation));
 
         return reservationId;
     }
