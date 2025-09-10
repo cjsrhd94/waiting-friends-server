@@ -18,9 +18,23 @@
 - `java 17`
 - `Spring Boot`, `Spring Cloud`
 - `Spring Security`, `JWT`
-- `Spring Data JPA`, `QueryDSL`
+- `Spring Data JPA`
 - `MySQL`, `Redis`
 - `Kafka`, `Zookeeper`
 - `Docker`
 - `Prometheus`, `Grafana`, `Loki`
 - `ngrinder`
+
+## 📌 아키텍처
+![project_architecture.png](project_architecture.png)
+## 📌 기술적 고민과 해결
+- 동시성 제어
+  - [낙관적 락과 비관적 락을 사용하여 예약 기능 동시성 처리하기](https://cjsrhd94.tistory.com/213)
+  - [Redisson 분산락을 사용하여 예약 기능 동시성 처리하기](https://cjsrhd94.tistory.com/215)
+- 성능 최적화
+  - [1000만건의 데이터를 커버링 인덱스를 사용하여 쿼리 최적화하기](https://cjsrhd94.tistory.com/223)
+  - [Spring JDBC Batch Insert를 사용해 대용량 데이터 삽입시 성능 최적화](https://cjsrhd94.tistory.com/219)
+  - [nGrinder 부하 테스트를 활용하여 Hikari CP 최적화하기](https://cjsrhd94.tistory.com/221)
+- 모니터링
+  - [prometheus와 grafana를 사용해 서버 모니터링 환경 구축](https://cjsrhd94.tistory.com/216)
+  - [loki와 grafana를 사용해 로그 모니터링 환경 구축](https://cjsrhd94.tistory.com/217)
