@@ -1,7 +1,8 @@
 package com.example.waitingreservationservice.service;
 
-import com.example.waitingreservationservice.common.annotation.DistributedLock;
-import com.example.waitingreservationservice.common.util.RedisUtil;
+import com.example.waitingredis.util.RedisUtil;
+import com.example.waitingredis.common.annotation.DistributedLock;
+import com.example.waitingreservationservice.common.util.CacheKey;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static com.example.waitingreservationservice.common.util.RedisUtil.SPOT_CACHE_KEY;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class AdminReservationService {
             spot.increaseRemainingCapacity(reservation.getHeadCount());
         }
 
-        redisUtil.removeZSet(SPOT_CACHE_KEY + reservation.getSpotId(), reservationId.toString());
+        redisUtil.removeZSet(CacheKey.SPOT.getKey() + reservation.getSpotId(), reservationId.toString());
     }
 
     @Transactional(readOnly = true)

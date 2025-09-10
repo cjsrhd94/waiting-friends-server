@@ -1,6 +1,6 @@
-package com.example.waitingreservationservice.common.aop;
+package com.example.waitingredis.common.aop;
 
-import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingredis.common.annotation.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -25,7 +25,7 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final RequireNewTransactionAspect requireNewTransactionAspect;
 
-    @Around("@annotation(com.example.waitingreservationservice.common.annotation.DistributedLock)")
+    @Around("@annotation(com.example.waitingredis.common.annotation.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

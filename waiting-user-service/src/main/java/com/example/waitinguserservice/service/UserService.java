@@ -1,9 +1,9 @@
 package com.example.waitinguserservice.service;
 
+import com.example.waitingredis.util.RedisUtil;
 import com.example.waitinguserservice.common.exception.InvalidRefreshTokenException;
 import com.example.waitinguserservice.common.security.jwt.JwtTokenResponse;
 import com.example.waitinguserservice.common.security.jwt.JwtUtil;
-import com.example.waitinguserservice.common.util.RedisUtil;
 import com.example.waitinguserservice.dto.request.LogoutRequest;
 import com.example.waitinguserservice.dto.request.ReissueRequest;
 import com.example.waitinguserservice.dto.request.SignUpRequest;

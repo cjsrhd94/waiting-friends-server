@@ -1,8 +1,9 @@
 package com.example.waitingreservationservice.service;
 
-import com.example.waitingreservationservice.common.annotation.DistributedLock;
+import com.example.waitingredis.util.RedisUtil;
+import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
-import com.example.waitingreservationservice.common.util.RedisUtil;
+import com.example.waitingreservationservice.common.util.CacheKey;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
@@ -12,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-
-import static com.example.waitingreservationservice.common.util.RedisUtil.SPOT_CACHE_KEY;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class ReservationConsumer {
 
         spot.decreaseRemainingCapacity(payload.getHeadCount());
 
-        redisUtil.addZSet(SPOT_CACHE_KEY+ payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
+        redisUtil.addZSet(CacheKey.SPOT.getKey() + payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
 
         return reservationId;
     }

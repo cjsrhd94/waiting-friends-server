@@ -1,10 +1,10 @@
 package com.example.waitinguserservice.common.security.config;
 
+import com.example.waitingredis.util.RedisUtil;
 import com.example.waitinguserservice.common.security.jwt.CustomAuthenticationEntryPoint;
 import com.example.waitinguserservice.common.security.jwt.JwtAuthenticationFilter;
 import com.example.waitinguserservice.common.security.jwt.JwtAuthorizationFilter;
 import com.example.waitinguserservice.common.security.jwt.JwtUtil;
-import com.example.waitinguserservice.common.util.RedisUtil;
 import com.example.waitinguserservice.repository.reader.UserReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.example.waitingreservationservice.common.aop;
+package com.example.waitingredis.common.aop;
 
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

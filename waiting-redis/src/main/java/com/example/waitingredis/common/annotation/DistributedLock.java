@@ -1,4 +1,4 @@
-package com.example.waitingreservationservice.common.annotation;
+package com.example.waitingredis.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

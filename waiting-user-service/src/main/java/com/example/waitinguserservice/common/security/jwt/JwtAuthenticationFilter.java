@@ -1,6 +1,6 @@
 package com.example.waitinguserservice.common.security.jwt;
 
-import com.example.waitinguserservice.common.util.RedisUtil;
+import com.example.waitingredis.util.RedisUtil;
 import com.example.waitinguserservice.dto.request.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

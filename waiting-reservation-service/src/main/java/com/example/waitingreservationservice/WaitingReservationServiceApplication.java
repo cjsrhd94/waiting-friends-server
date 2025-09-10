@@ -5,7 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.retry.annotation.EnableRetry;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+		"com.example.waitingreservationservice",
+		"com.example.waitingcommon",
+		"com.example.waitingredis"
+})
 @EnableFeignClients
 @EnableRetry
 public class WaitingReservationServiceApplication {

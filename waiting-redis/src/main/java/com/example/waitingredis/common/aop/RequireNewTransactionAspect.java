@@ -1,4 +1,4 @@
-package com.example.waitingreservationservice.common.aop;
+package com.example.waitingredis.common.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
