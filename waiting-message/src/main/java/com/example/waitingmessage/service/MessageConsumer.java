@@ -4,9 +4,9 @@ import com.example.waitingmessage.dto.ReservationWaitingRequest;
 import com.example.waitingmessage.entity.Message;
 import com.example.waitingmessage.entity.Template;
 import com.example.waitingmessage.repository.MessageRepository;
+import com.example.waitingmessage.util.JsonConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 
@@ -20,13 +20,14 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class MessageConsumer {
+    private final JsonConverter jsonConverter;
     private final MessageRepository messageRepository;
 
     @KafkaListener(topics = "reservation.message.waiting", containerFactory = "kafkaListenerContainerFactory")
     @RetryableTopic
     @Transactional
-    public void sendWaitingMessage(ConsumerRecord<String, ReservationWaitingRequest> record) {
-        ReservationWaitingRequest request = record.value();
+    public void sendWaitingMessage(String kafkaMessage) {
+        ReservationWaitingRequest request = jsonConverter.fromJson(kafkaMessage, ReservationWaitingRequest.class);
 
         String content = MessageFormat.format(
                 Template.WAITING.getMessage(),

@@ -22,21 +22,19 @@ public class KafkaConsumerConfig {
     private String bootStrapServers;
 
     @Bean
-    public ConsumerFactory<String, ReservationWaitingRequest> consumerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
-        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "reservation-message-group");
-        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+    public ConsumerFactory<String, String> consumerFactory() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "reservation-message-group");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        JsonDeserializer<ReservationWaitingRequest> deserializer = new JsonDeserializer<>(ReservationWaitingRequest.class, false);
-
-        return new DefaultKafkaConsumerFactory<>(configProps, new StringDeserializer(), deserializer);
+        return new DefaultKafkaConsumerFactory<>(props);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReservationWaitingRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReservationWaitingRequest> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
