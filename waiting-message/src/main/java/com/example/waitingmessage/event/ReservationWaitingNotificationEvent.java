@@ -1,4 +1,4 @@
-package com.example.waitingmessage.dto;
+package com.example.waitingmessage.event;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationWaitingRequest {
+public class ReservationWaitingNotificationEvent {
     private Long reservationId;
     private Long spotId;
     // 지점 이름

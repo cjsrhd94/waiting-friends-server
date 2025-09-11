@@ -1,4 +1,4 @@
-package com.example.waitingreservationservice.dto.request;
+package com.example.waitingreservationservice.dto.event;
 
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReservationWaitingRequest {
+public class ReservationWaitingNotificationEvent {
     private Long reservationId;
     private Long spotId;
     // 지점 이름
@@ -24,7 +24,7 @@ public class ReservationWaitingRequest {
     // 예상 대기 시간
     private Integer expectedWaitingTime;
 
-    public ReservationWaitingRequest(
+    public ReservationWaitingNotificationEvent(
             Spot spot,
             Reservation reservation
     ) {
