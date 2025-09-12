@@ -6,6 +6,7 @@ import com.example.waitingreservationservice.common.exception.EnterNotAllowExcep
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.CacheKey;
 import com.example.waitingreservationservice.common.util.EventProducer;
+import com.example.waitingreservationservice.dto.event.ReservationCanceledNotificationEvent;
 import com.example.waitingreservationservice.dto.event.ReservationWaitingNotificationEvent;
 import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
@@ -64,6 +65,8 @@ public class ReservationService {
         spot.increaseRemainingCapacity(reservation.getHeadCount());
 
         redisUtil.removeZSet(CacheKey.SPOT.getKey() + reservation.getSpotId(), reservationId.toString());
+
+        eventProducer.sendReservationCanceled(new ReservationCanceledNotificationEvent(reservation));
     }
 
     @Transactional(readOnly = true)
