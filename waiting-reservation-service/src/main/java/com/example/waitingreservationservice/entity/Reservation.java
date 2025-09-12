@@ -111,6 +111,10 @@ public class Reservation {
         this.status = Status.CANCELLED;
     }
 
+    public Boolean isCalling() {
+        return this.status == Status.CALLING;
+    }
+
     public Boolean isCancelled() {
         return this.status == Status.CANCELLED;
     }

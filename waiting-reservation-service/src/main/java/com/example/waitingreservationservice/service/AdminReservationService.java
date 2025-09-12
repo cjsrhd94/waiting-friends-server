@@ -3,6 +3,8 @@ package com.example.waitingreservationservice.service;
 import com.example.waitingredis.util.RedisUtil;
 import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.util.CacheKey;
+import com.example.waitingreservationservice.common.util.EventProducer;
+import com.example.waitingreservationservice.dto.event.ReservationCallingNotificationEvent;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -20,6 +22,8 @@ import java.util.List;
 public class AdminReservationService {
     private final ReservationReader reservationReader;
     private final SpotReader spotReader;
+
+    private final EventProducer eventProducer;
     private final RedisUtil redisUtil;
 
 
@@ -32,6 +36,11 @@ public class AdminReservationService {
         Reservation reservation = reservationReader.findById(reservationId);
 
         reservation.updateStatus(request.getStatus());
+
+        if (reservation.isCalling()) {
+            Spot spot = spotReader.findById(reservation.getSpotId());
+            eventProducer.sendReservationCalling(new ReservationCallingNotificationEvent(spot, reservation));
+        }
 
         if (reservation.isCancelled()) {
             Spot spot = spotReader.findById(reservation.getSpotId());
