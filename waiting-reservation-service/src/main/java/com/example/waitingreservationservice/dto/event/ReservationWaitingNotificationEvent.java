@@ -30,7 +30,7 @@ public class ReservationWaitingNotificationEvent {
         this.spotName = reservation.getSpotName();
         this.phoneNumber = reservation.getPhoneNumber();
         this.headCount = reservation.getHeadCount();
-        this.waitingNumber = 0;
+        this.waitingNumber = reservation.getWaitingNumber();
         this.waitingOrder = 0;
         this.expectedWaitingTime = 0;
     }

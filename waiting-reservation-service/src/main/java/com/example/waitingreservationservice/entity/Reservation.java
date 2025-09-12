@@ -26,6 +26,9 @@ public class Reservation {
     @Column(name = "head_count", nullable = false)
     private Integer headCount;
 
+    @Column(name = "waiting_number", nullable = false)
+    private Integer waitingNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
@@ -43,7 +46,8 @@ public class Reservation {
             Long spotId,
             String spotName,
             String phoneNumber,
-            Integer headCount
+            Integer headCount,
+            Integer waitingNumber
     ) {
         validatePhoneNumber(phoneNumber);
         isOverHeadCount(headCount);
@@ -52,6 +56,7 @@ public class Reservation {
         this.spotName = spotName;
         this.phoneNumber = phoneNumber;
         this.headCount = headCount;
+        this.waitingNumber = waitingNumber;
         this.status = Status.WAITING; // 초기 상태는 대기 중
         this.reservationDate = LocalDateTime.now(); // 예약 날짜는 현재 시간으로 설정
     }

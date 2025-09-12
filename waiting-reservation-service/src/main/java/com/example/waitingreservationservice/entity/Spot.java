@@ -1,7 +1,6 @@
 package com.example.waitingreservationservice.entity;
 
 import com.example.waitingreservationservice.common.exception.InvalidSpotStatusException;
-import com.example.waitingreservationservice.common.exception.NotEnoughCapacityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,18 +24,15 @@ public class Spot {
     @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name = "max_capacity", nullable = false)
-    private Integer maxCapacity;
-
-    @Column(name = "remaining_capacity", nullable = false)
-    private Integer remainingCapacity;
-
     @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Column(name = "waiting_number", nullable = false)
+    private Integer waitingNumber;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -58,14 +54,11 @@ public class Spot {
     @Builder
     public Spot(
             String name,
-            Integer maxCapacity,
-            Integer remainingCapacity,
             String address,
             Long userId
     ) {
         this.name = name;
-        this.maxCapacity = maxCapacity;
-        this.remainingCapacity = remainingCapacity;
+        this.waitingNumber = 0;
         this.address = address;
         this.status = Status.CLOSED;
         this.userId = userId;
@@ -75,26 +68,17 @@ public class Spot {
         return this.status == Status.WAITING;
     }
 
-    public void decreaseRemainingCapacity(Integer headCount) {
-        if (this.remainingCapacity < headCount) {
-            throw new NotEnoughCapacityException(
-                    "최대 " + remainingCapacity + "명까지 대기할 수 있습니다. 요청한 인원: " + headCount
-            );
-        }
 
-        this.remainingCapacity -= headCount;
-    }
-
-    public void increaseRemainingCapacity(Integer headCount) {
-        this.remainingCapacity += headCount;
+    public void increaseWaitingNumber() {
+        this.waitingNumber++;
     }
 
     public void updateStatus(String status) {
         this.status = this.status.findByName(status);
 
-        // 영업 종료시 잔여 수용량을 최대 수용량으로 초기화 한다.
+        // 영업 종료시 대기 번호를 0으로 초기화 한다.
         if (this.status == Status.CLOSED) {
-            this.remainingCapacity = this.maxCapacity;
+            this.waitingNumber = 0;
         }
     }
 }

@@ -23,8 +23,6 @@ public class AdminSpotService {
     public Long createSpot(Long userId, SpotCreateRequest request) {
         Spot spot = Spot.builder()
                 .name(request.getName())
-                .maxCapacity(request.getCapacity())
-                .remainingCapacity(request.getCapacity())
                 .address(request.getAddress())
                 .userId(userId)
                 .build();

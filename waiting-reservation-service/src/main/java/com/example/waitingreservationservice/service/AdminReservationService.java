@@ -43,8 +43,6 @@ public class AdminReservationService {
         }
 
         if (reservation.isCancelled()) {
-            Spot spot = spotReader.findById(reservation.getSpotId());
-            spot.increaseRemainingCapacity(reservation.getHeadCount());
             eventProducer.sendReservationCanceled(new ReservationCanceledNotificationEvent(reservation));
         }
 

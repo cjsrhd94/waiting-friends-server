@@ -4,6 +4,8 @@ import com.example.waitingredis.util.RedisUtil;
 import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.util.CacheKey;
+import com.example.waitingreservationservice.common.util.EventProducer;
+import com.example.waitingreservationservice.dto.event.ReservationWaitingNotificationEvent;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Component;
 public class ReservationConsumer {
     private final ReservationRepository reservationRepository;
     private final SpotReader spotReader;
+
+    private final EventProducer eventProducer;
     private final RedisUtil redisUtil;
 
     @KafkaListener(topics = "reservation", containerFactory = "kafkaListenerContainerFactory")
@@ -32,12 +36,20 @@ public class ReservationConsumer {
             throw new EnterNotAllowException("현재 입장할 수 없는 상태입니다.");
         }
 
-        Reservation reservation = new Reservation(payload.getSpotId(), spot.getName(), payload.getPhoneNumber(), payload.getHeadCount());
+        spot.increaseWaitingNumber();
+
+        Reservation reservation = new Reservation(
+                payload.getSpotId(),
+                spot.getName(),
+                payload.getPhoneNumber(),
+                payload.getHeadCount(),
+                spot.getWaitingNumber()
+        );
         Long reservationId = reservationRepository.save(reservation).getId();
 
-        spot.decreaseRemainingCapacity(payload.getHeadCount());
-
         redisUtil.addZSet(CacheKey.SPOT.getKey() + payload.getSpotId(), reservationId.toString(), System.currentTimeMillis());
+
+        eventProducer.sendReservationWaiting(new ReservationWaitingNotificationEvent(reservation));
 
         return reservationId;
     }

@@ -23,6 +23,6 @@ public class ReservationCallingNotificationEvent {
         this.spotId = reservation.getSpotId();
         this.spotName = reservation.getSpotName();
         this.phoneNumber = reservation.getPhoneNumber();
-        this.waitingNumber = 0;
+        this.waitingNumber = reservation.getWaitingNumber();
     }
 }

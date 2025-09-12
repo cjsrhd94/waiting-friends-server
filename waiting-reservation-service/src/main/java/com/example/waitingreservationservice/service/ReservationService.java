@@ -42,11 +42,17 @@ public class ReservationService {
         if (!spot.canWait()) {
             throw new EnterNotAllowException("현재 입장할 수 없는 상태입니다.");
         }
+        spot.increaseWaitingNumber();
 
-        Reservation reservation = new Reservation(spotId, spot.getName(), phoneNumber, headCount);
+        Reservation reservation = new Reservation(
+                spotId,
+                spot.getName(),
+                phoneNumber,
+                headCount,
+                spot.getWaitingNumber()
+        );
+
         Long reservationId = reservationRepository.save(reservation).getId();
-
-        spot.decreaseRemainingCapacity(headCount);
 
         redisUtil.addZSet(CacheKey.SPOT.getKey() + spotId, reservationId.toString(), System.currentTimeMillis());
 
@@ -60,9 +66,6 @@ public class ReservationService {
     public void cancel(Long reservationId) {
         Reservation reservation = reservationReader.findById(reservationId);
         reservation.cancel();
-
-        Spot spot = spotReader.findById(reservation.getSpotId());
-        spot.increaseRemainingCapacity(reservation.getHeadCount());
 
         redisUtil.removeZSet(CacheKey.SPOT.getKey() + reservation.getSpotId(), reservationId.toString());
 

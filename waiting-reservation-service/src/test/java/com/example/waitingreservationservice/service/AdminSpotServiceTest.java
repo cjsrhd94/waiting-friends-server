@@ -41,13 +41,9 @@ class AdminSpotServiceTest {
     @Test
     @Transactional
     void save_메서드를_사용하여_INSERT한다() {
-        Integer capacity = faker.number().numberBetween(100, 1000);
-
         for (int i = 0; i < INSERT_NUM; i++) {
             Spot spot = Spot.builder()
                     .name(faker.restaurant().name())
-                    .maxCapacity(capacity)
-                    .remainingCapacity(capacity)
                     .address(faker.address().fullAddress())
                     .userId(1L)
                     .build();
@@ -59,14 +55,11 @@ class AdminSpotServiceTest {
     @Test
     @Transactional
     void saveAll_메서드를_사용하여_INSERT한다() {
-        Integer capacity = faker.number().numberBetween(100, 1000);
         List<Spot> spots = new ArrayList<>();
 
         for (int i = 0; i < INSERT_NUM; i++) {
             Spot spot = Spot.builder()
                     .name(faker.restaurant().name())
-                    .maxCapacity(capacity)
-                    .remainingCapacity(capacity)
                     .address(faker.address().fullAddress())
                     .userId(1L)
                     .build();
@@ -80,27 +73,24 @@ class AdminSpotServiceTest {
     @Transactional
     void jdbc_batch_insert를_사용하여_INSERT한다() throws InterruptedException {
         String sql = "INSERT INTO spots (" +
-                "max_capacity, " +
-                "remaining_capacity, " +
                 "user_id, " +
                 "address, " +
                 "name, " +
                 "status, " +
+                "waiting_number," +
                 "version" +
                 ") " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                Long maxCapacity = (long) faker.number().numberBetween(100, 1000);
-                ps.setLong(1, maxCapacity);
-                ps.setLong(2, maxCapacity);
-                ps.setLong(3, 1L);
-                ps.setString(4, faker.address().fullAddress());
-                ps.setString(5, faker.restaurant().name());
-                ps.setString(6, "WAITING");
-                ps.setLong(7, 1L);
+                ps.setLong(1, 1L);
+                ps.setString(2, faker.address().fullAddress());
+                ps.setString(3, faker.restaurant().name());
+                ps.setString(4, "WAITING");
+                ps.setInt(5, 0);
+                ps.setLong(6, 1L);
             }
 
             @Override
@@ -114,14 +104,13 @@ class AdminSpotServiceTest {
     @Transactional
     void 멀티_쓰레드와_jdbc_batch_insert를_사용하여_INSERT한다() throws InterruptedException {
         String sql = "INSERT INTO spots (" +
-                "max_capacity, " +
-                "remaining_capacity, " +
                 "user_id, " +
                 "address, " +
                 "name, " +
                 "status, " +
+                "waiting_number," +
                 "version" +
-                ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+                ") VALUES (?, ?, ?, ?, ?, ?)";
         int totalBatches = INSERT_NUM / BATCH_SIZE;
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
@@ -132,16 +121,15 @@ class AdminSpotServiceTest {
 
                 // 배치 데이터 생성
                 for (int i = 0; i < BATCH_SIZE; i++) {
-                    Long maxCapacity = (long) faker.number().numberBetween(100, 1000);
-                    Long remainingCapacity = maxCapacity;
                     Long userId = 1L;
                     String address = faker.address().fullAddress();
                     String name = faker.restaurant().name();
                     String status = "WAITING";
+                    Integer waitingNumber = 0;
                     Long version = 1L;
 
                     batchList.add(new Object[]{
-                            maxCapacity, remainingCapacity, userId, address, name, status, version
+                            userId, address, name, status, waitingNumber, version
                     });
                 }
 
@@ -152,12 +140,11 @@ class AdminSpotServiceTest {
                                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                                     Object[] values = batchList.get(i);
                                     ps.setLong(1, (Long) values[0]);
-                                    ps.setLong(2, (Long) values[1]);
-                                    ps.setLong(3, (Long) values[2]);
+                                    ps.setString(2, (String) values[1]);
+                                    ps.setString(3, (String) values[2]);
                                     ps.setString(4, (String) values[3]);
-                                    ps.setString(5, (String) values[4]);
-                                    ps.setString(6, (String) values[5]);
-                                    ps.setLong(7, (Long) values[6]);
+                                    ps.setInt(5, (Integer) values[4]);
+                                    ps.setLong(6, (Long) values[5]);
                                 }
 
                                 @Override

@@ -29,16 +29,16 @@ public class SpotService {
             maxAttempts = 5,
             backoff = @Backoff(delay = 1000)
     )
-    public void decreaseRemainingCapacityWithOptimisticLock(Long spotId, Integer headCount) {
+    public void increaseWaitingNumberWithOptimisticLock(Long spotId) {
         Spot spot = spotReader.findByIdForOptimistic(spotId);
-        spot.decreaseRemainingCapacity(headCount);
+        spot.increaseWaitingNumber();
         spotRepository.save(spot);
     }
 
     @Transactional
-    public void decreaseRemainingCapacityWithPessimisticLock(Long spotId, Integer headCount) {
+    public void increaseWaitingNumberWithPessimisticLock(Long spotId) {
         Spot spot = spotReader.findByIdForUpdate(spotId);
-        spot.decreaseRemainingCapacity(headCount);
+        spot.increaseWaitingNumber();
         spotRepository.save(spot);
     }
 

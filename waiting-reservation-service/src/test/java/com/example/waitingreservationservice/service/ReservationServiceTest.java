@@ -38,8 +38,7 @@ class ReservationServiceTest {
 
     @Test
     void 레디스_분산락을_활용하여_예약한다() throws InterruptedException {
-        Integer remainingCapacity = 1000;
-        Spot spot1 = new Spot("점포 1호", 1000, remainingCapacity, "서울특별시 영등포구", 1L);
+        Spot spot1 = new Spot("점포 1호", "서울특별시 영등포구", 1L);
         spot1.updateStatus("waiting");
         Long spotId = spotRepository.save(spot1).getId();
 
@@ -63,6 +62,6 @@ class ReservationServiceTest {
 
         Spot spot = spotReader.findById(spotId);
 
-        assertEquals(remainingCapacity - threadCount, spot.getRemainingCapacity());
+        assertEquals(threadCount, spot.getWaitingNumber());
     }
 }

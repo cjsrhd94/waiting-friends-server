@@ -31,13 +31,12 @@ class SpotServiceTest {
 
     @AfterEach
     void tearDown() {
-        spotRepository.deleteAll();
+        spotRepository.deleteAllInBatch();
     }
 
     @Test
     void 낙관적_락을_사용하여_잔여_수용량을_감소시킨다() throws InterruptedException {
-        Integer remainingCapacity = 1000;
-        Spot spot1 = new Spot("점포 1호", 1000, remainingCapacity, "서울특별시 영등포구", 1L);
+        Spot spot1 = new Spot("점포 1호", "서울특별시 영등포구", 1L);
         Long spotId = spotRepository.save(spot1).getId();
 
         int threadCount = 3;
@@ -47,9 +46,7 @@ class SpotServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    spotService.decreaseRemainingCapacityWithOptimisticLock(
-                            spotId, 1
-                    );
+                    spotService.increaseWaitingNumberWithOptimisticLock(spotId);
                 } finally {
                     latch.countDown();
                 }
@@ -60,13 +57,12 @@ class SpotServiceTest {
 
         Spot spot = spotReader.findById(spotId);
 
-        assertEquals(remainingCapacity - threadCount, spot.getRemainingCapacity());
+        assertEquals(threadCount, spot.getWaitingNumber());
     }
 
     @Test
     void 비관적_락을_사용하여_잔여_수용량을_감소시킨다() throws InterruptedException {
-        Integer remainingCapacity = 1000;
-        Spot spot1 = new Spot("점포 1호", 1000, remainingCapacity, "서울특별시 영등포구", 1L);
+        Spot spot1 = new Spot("점포 1호", "서울특별시 영등포구", 1L);
         Long spotId = spotRepository.save(spot1).getId();
 
         int threadCount = 100;
@@ -76,9 +72,7 @@ class SpotServiceTest {
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    spotService.decreaseRemainingCapacityWithPessimisticLock(
-                            spotId, 1
-                    );
+                    spotService.increaseWaitingNumberWithPessimisticLock(spotId);
                 } finally {
                     latch.countDown();
                 }
@@ -89,6 +83,6 @@ class SpotServiceTest {
 
         Spot spot = spotReader.findById(spotId);
 
-        assertEquals(remainingCapacity - threadCount, spot.getRemainingCapacity());
+        assertEquals(threadCount, spot.getWaitingNumber());
     }
 }
