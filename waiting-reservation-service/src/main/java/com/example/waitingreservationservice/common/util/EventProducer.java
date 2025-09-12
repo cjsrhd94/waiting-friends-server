@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.common.util;
 
 import com.example.waitingreservationservice.dto.event.ReservationCallingNotificationEvent;
+import com.example.waitingreservationservice.dto.event.ReservationCanceledNotificationEvent;
 import com.example.waitingreservationservice.dto.event.ReservationWaitingNotificationEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,11 @@ public class EventProducer {
 
     public void sendReservationCalling(ReservationCallingNotificationEvent event) {
         RawMessage rawMessage = createRawMessage("reservation.calling", event);
+        sendRawMessage("reservation.message", rawMessage);
+    }
+
+    public void sendReservationCanceled(ReservationCanceledNotificationEvent event) {
+        RawMessage rawMessage = createRawMessage("reservation.canceled", event);
         sendRawMessage("reservation.message", rawMessage);
     }
 

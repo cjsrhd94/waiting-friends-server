@@ -18,13 +18,10 @@ public class ReservationCallingNotificationEvent {
     // 예약 번호
     private Integer waitingNumber;
 
-    public ReservationCallingNotificationEvent(
-            Spot spot,
-            Reservation reservation
-    ) {
+    public ReservationCallingNotificationEvent(Reservation reservation) {
         this.reservationId = reservation.getId();
-        this.spotId = spot.getId();
-        this.spotName = spot.getName();
+        this.spotId = reservation.getSpotId();
+        this.spotName = reservation.getSpotName();
         this.phoneNumber = reservation.getPhoneNumber();
         this.waitingNumber = 0;
     }

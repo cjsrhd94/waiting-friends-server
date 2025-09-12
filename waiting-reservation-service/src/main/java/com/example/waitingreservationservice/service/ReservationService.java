@@ -49,7 +49,7 @@ public class ReservationService {
 
         redisUtil.addZSet(CacheKey.SPOT.getKey() + spotId, reservationId.toString(), System.currentTimeMillis());
 
-        eventProducer.sendReservationWaiting(new ReservationWaitingNotificationEvent(spot, reservation));
+        eventProducer.sendReservationWaiting(new ReservationWaitingNotificationEvent(reservation));
 
         return reservationId;
     }

@@ -5,6 +5,7 @@ import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.util.CacheKey;
 import com.example.waitingreservationservice.common.util.EventProducer;
 import com.example.waitingreservationservice.dto.event.ReservationCallingNotificationEvent;
+import com.example.waitingreservationservice.dto.event.ReservationCanceledNotificationEvent;
 import com.example.waitingreservationservice.dto.request.ReservationUpdateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -38,13 +39,13 @@ public class AdminReservationService {
         reservation.updateStatus(request.getStatus());
 
         if (reservation.isCalling()) {
-            Spot spot = spotReader.findById(reservation.getSpotId());
-            eventProducer.sendReservationCalling(new ReservationCallingNotificationEvent(spot, reservation));
+            eventProducer.sendReservationCalling(new ReservationCallingNotificationEvent(reservation));
         }
 
         if (reservation.isCancelled()) {
             Spot spot = spotReader.findById(reservation.getSpotId());
             spot.increaseRemainingCapacity(reservation.getHeadCount());
+            eventProducer.sendReservationCanceled(new ReservationCanceledNotificationEvent(reservation));
         }
 
         redisUtil.removeZSet(CacheKey.SPOT.getKey() + reservation.getSpotId(), reservationId.toString());
