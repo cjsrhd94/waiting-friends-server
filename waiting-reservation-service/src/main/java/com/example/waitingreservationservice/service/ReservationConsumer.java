@@ -1,10 +1,10 @@
 package com.example.waitingreservationservice.service;
 
+import com.example.waitingkafka.util.JsonConverter;
 import com.example.waitingredis.util.RedisUtil;
 import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.util.CacheKey;
-import com.example.waitingreservationservice.common.util.EventProducer;
 import com.example.waitingreservationservice.dto.event.ReservationWaitingNotificationEvent;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.entity.Reservation;
@@ -23,12 +23,13 @@ public class ReservationConsumer {
     private final SpotReader spotReader;
 
     private final EventProducer eventProducer;
+    private final JsonConverter jsonConverter;
     private final RedisUtil redisUtil;
 
     @KafkaListener(topics = "reservation", containerFactory = "kafkaListenerContainerFactory")
     @DistributedLock(key = "'spot-' + #spotId")
-    public Long reserve(ConsumerRecord<String, ReservationCreateRequest> record) {
-        ReservationCreateRequest payload = record.value();
+    public Long reserve(String message) {
+        ReservationCreateRequest payload = jsonConverter.fromJson(message, ReservationCreateRequest.class);
 
         Spot spot = spotReader.findById(payload.getSpotId());
 

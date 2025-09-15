@@ -5,7 +5,6 @@ import com.example.waitingredis.common.annotation.DistributedLock;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.CacheKey;
-import com.example.waitingreservationservice.common.util.EventProducer;
 import com.example.waitingreservationservice.dto.event.ReservationCanceledNotificationEvent;
 import com.example.waitingreservationservice.dto.event.ReservationWaitingNotificationEvent;
 import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;

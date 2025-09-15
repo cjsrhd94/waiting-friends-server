@@ -1,4 +1,4 @@
-package com.example.waitingmessage.util;
+package com.example.waitingkafka.util;
 
 public interface TypedEventHandler<T> extends EventHandler<T> {
     Class<T> getDtoClass();

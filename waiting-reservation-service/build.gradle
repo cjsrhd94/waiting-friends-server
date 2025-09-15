@@ -54,6 +54,7 @@ dependencies {
 
 	implementation project(':waiting-common')
 	implementation project(':waiting-redis')
+	implementation project(':waiting-kafka')
 }
 
 tasks.named('test') {

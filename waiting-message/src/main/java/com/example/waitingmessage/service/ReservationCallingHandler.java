@@ -1,10 +1,10 @@
 package com.example.waitingmessage.service;
 
+import com.example.waitingkafka.util.TypedEventHandler;
 import com.example.waitingmessage.entity.Message;
 import com.example.waitingmessage.entity.Template;
 import com.example.waitingmessage.event.ReservationCallingNotificationEvent;
 import com.example.waitingmessage.repository.MessageRepository;
-import com.example.waitingmessage.util.TypedEventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class ReservationCallingHandler implements TypedEventHandler<ReservationC
     private final MessageRepository messageRepository;
 
     @Override
-    public String getEventType() {
+    public String eventType() {
         return "reservation.calling";
     }
 

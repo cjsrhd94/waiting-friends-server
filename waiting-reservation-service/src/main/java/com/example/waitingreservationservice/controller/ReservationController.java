@@ -3,7 +3,7 @@ package com.example.waitingreservationservice.controller;
 import com.example.waitingreservationservice.dto.request.ReservationCreateRequest;
 import com.example.waitingreservationservice.dto.response.ReservationOrderResponse;
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
-import com.example.waitingreservationservice.service.ReservationProducer;
+import com.example.waitingreservationservice.service.EventProducer;
 import com.example.waitingreservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reservations")
 public class ReservationController {
     private final ReservationService reservationService;
-    private final ReservationProducer reservationProducer;
+    private final EventProducer eventProducer;
 
     @GetMapping("/health")
     public String healthCheck() {
@@ -29,7 +29,7 @@ public class ReservationController {
 
     @PostMapping("/kafka")
     public ResponseEntity<Void> reserveWithKafka(@RequestBody ReservationCreateRequest request) {
-        reservationProducer.produceReservationEvent(request);
+        eventProducer.produceReservationEvent(request);
         return ResponseEntity.ok().build();
     }
 

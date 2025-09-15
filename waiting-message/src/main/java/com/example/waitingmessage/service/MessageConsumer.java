@@ -1,8 +1,8 @@
 package com.example.waitingmessage.service;
 
-import com.example.waitingmessage.event.RawMessage;
-import com.example.waitingmessage.util.EventDispatcher;
-import com.example.waitingmessage.util.JsonConverter;
+import com.example.waitingkafka.util.EventDispatcher;
+import com.example.waitingkafka.util.JsonConverter;
+import com.example.waitingkafka.util.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,8 +22,6 @@ public class MessageConsumer {
     @RetryableTopic
     @Transactional
     public void consume(String message) {
-        eventDispatcher.dispatch(
-                jsonConverter.fromJson(message, RawMessage.class)
-        );
+        eventDispatcher.dispatch(jsonConverter.fromJson(message, Event.class));
     }
 }

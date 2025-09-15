@@ -1,6 +1,5 @@
-package com.example.waitingmessage.util;
+package com.example.waitingkafka.util;
 
-import com.example.waitingmessage.event.RawMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -14,19 +13,19 @@ public class EventDispatcher {
 
     public EventDispatcher(List<EventHandler<?>> handlerList, JsonConverter jsonConverter) {
         for (EventHandler<?> handler : handlerList) {
-            handlers.put(handler.getEventType(), handler);
+            handlers.put(handler.eventType(), handler);
         }
         this.jsonConverter = jsonConverter;
     }
 
-    public void dispatch(RawMessage rawMessage) {
-        EventHandler<?> handler = handlers.get(rawMessage.getEventType());
+    public void dispatch(Event event) {
+        EventHandler<?> handler = handlers.get(event.getType());
         if (handler == null) {
-            throw new RuntimeException("등록되지 않은 이벤트 타입: " + rawMessage.getEventType());
+            throw new RuntimeException("등록되지 않은 이벤트 타입: " + event.getType());
         }
 
         if (handler instanceof TypedEventHandler<?> typedHandler) {
-            Object dto = jsonConverter.fromJson(rawMessage.getPayload(), typedHandler.getDtoClass());
+            Object dto = jsonConverter.fromJson(event.getPayload(), typedHandler.getDtoClass());
             typedHandler.handleDto(dto);
         }
     }

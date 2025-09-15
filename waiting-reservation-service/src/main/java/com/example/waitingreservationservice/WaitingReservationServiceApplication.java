@@ -8,7 +8,8 @@ import org.springframework.retry.annotation.EnableRetry;
 @SpringBootApplication(scanBasePackages = {
 		"com.example.waitingreservationservice",
 		"com.example.waitingcommon",
-		"com.example.waitingredis"
+		"com.example.waitingredis",
+		"com.example.waitingkafka"
 })
 @EnableFeignClients
 @EnableRetry
