@@ -1,4 +1,4 @@
-package com.example.waitingreservationservice.common.response;
+package com.example.waitingcommon.response;
 
 public class ApiResponse<T> {
     private final boolean success;
