@@ -26,10 +26,11 @@ public class AdminSpotController {
 
     @PutMapping("/{spotId}/status")
     public ResponseEntity<Void> updateSpotStatus(
+            @RequestHeader("id") Long userId,
             @PathVariable Long spotId,
             @RequestBody SpotStatusUpdateRequest request
     ) {
-        adminSpotService.updateSpotStatus(spotId, request);
+        adminSpotService.updateSpotStatus(userId, spotId, request);
         return ResponseEntity.ok().build();
     }
 

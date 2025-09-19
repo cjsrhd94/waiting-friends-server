@@ -68,9 +68,12 @@ public class Spot {
         return this.status == Status.WAITING;
     }
 
-
     public void increaseWaitingNumber() {
         this.waitingNumber++;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public void updateStatus(String status) {

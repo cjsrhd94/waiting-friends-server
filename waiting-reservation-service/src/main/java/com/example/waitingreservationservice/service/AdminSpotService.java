@@ -1,5 +1,6 @@
 package com.example.waitingreservationservice.service;
 
+import com.example.waitingreservationservice.common.exception.SpotAccessDeniedException;
 import com.example.waitingreservationservice.dto.request.SpotCreateRequest;
 import com.example.waitingreservationservice.dto.request.SpotStatusUpdateRequest;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
@@ -31,14 +32,17 @@ public class AdminSpotService {
     }
 
     @Transactional
-    public void updateSpotStatus(Long spotId, SpotStatusUpdateRequest request) {
+    public void updateSpotStatus(Long userId, Long spotId, SpotStatusUpdateRequest request) {
         Spot spot = spotReader.findById(spotId);
+        validateOwner(userId, spot);
+
         spot.updateStatus(request.getStatus());
     }
 
     @Transactional(readOnly = true)
     public SpotResponse getSpot(Long userId, Long spotId) {
         Spot spot = spotReader.findById(spotId);
+        validateOwner(userId, spot);
 
         return SpotResponse.from(spot);
     }
@@ -48,5 +52,11 @@ public class AdminSpotService {
         return spotReader.findSpotsBySearch(address).stream()
                 .map(SpotResponse::from)
                 .toList();
+    }
+
+    private void validateOwner(Long userId, Spot spot) {
+        if (!spot.isOwner(userId) ) {
+            throw new SpotAccessDeniedException();
+        }
     }
 }
