@@ -54,6 +54,9 @@ dependencies {
 
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 
+    //TSID
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.11.0'
+
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

@@ -1,5 +1,6 @@
 package com.example.waitinguserservice.entity;
 
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Tsid
     private Long id;
 
     private String email;
@@ -24,12 +25,10 @@ public class User {
 
     @Builder
     public User(
-            Long id,
             String email,
             String password,
             String role
     ) {
-        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;

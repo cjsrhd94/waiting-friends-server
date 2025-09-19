@@ -1,6 +1,7 @@
 package com.example.waitingreservationservice.entity;
 
 import com.example.waitingreservationservice.common.exception.InvalidSpotStatusException;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.Arrays;
 @Table(name = "spots")
 public class Spot {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Tsid
     private Long id;
 
     @Version

@@ -3,6 +3,7 @@ package com.example.waitingreservationservice.entity;
 import com.example.waitingreservationservice.common.exception.InvalidHeadCountException;
 import com.example.waitingreservationservice.common.exception.InvalidPhoneNumberFormatException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
+import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 @Table(name = "reservations")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Tsid
     private Long id;
 
     @Column(name = "phone_number", nullable = false)
