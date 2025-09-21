@@ -3,6 +3,7 @@ package com.example.waitinguserservice.common.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -13,7 +14,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    public static final String SECRET = "a6894769aa24941d4ae869fc69d30ddd60cdbbce7b85d7cd1f2660e406b4ea037e443ac47d058a2a00364831a13bbafde895d6a42e0648f1b352c226197b077d";
+    @Value("${jwt.secret}")
+    private String secret;
+
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
     public static final Long ACCESS_EXPIRATION_TIME = 60 * 60 * 1000L;
@@ -78,7 +81,7 @@ public class JwtUtil {
 
     private SecretKeySpec generateSecretKey() {
         return new SecretKeySpec(
-                SECRET.getBytes(StandardCharsets.UTF_8),
+                secret.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm()
         );
     }

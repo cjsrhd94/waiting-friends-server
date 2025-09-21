@@ -21,6 +21,9 @@ spring:
         hbm2ddl:
           auto: update
 
+jwt:
+  secret: a6894769aa24941d4ae869fc69d30ddd60cdbbce7b85d7cd1f2660e406b4ea037e443ac47d058a2a00364831a13bbafde895d6a42e0648f1b352c226197b077d
+
 eureka:
   client:
     register-with-eureka: true

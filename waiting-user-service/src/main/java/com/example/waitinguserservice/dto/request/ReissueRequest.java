@@ -1,8 +1,17 @@
 package com.example.waitinguserservice.dto.request;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReissueRequest {
     private String refreshToken;
+
+    public ReissueRequest(
+            String refreshToken
+    ) {
+        this.refreshToken = refreshToken;
+    }
 }

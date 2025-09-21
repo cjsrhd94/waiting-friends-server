@@ -1,7 +1,6 @@
 package com.example.waitinguserservice.common.security.jwt;
 
 import com.example.waitinguserservice.entity.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,10 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
+
+    private User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
