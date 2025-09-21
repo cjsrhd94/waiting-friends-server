@@ -3,6 +3,7 @@ package com.example.waitinggateway.filter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,9 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<AuthorizationHeaderFilter.Config> {
 
-    private static final String SECRET = "a6894769aa24941d4ae869fc69d30ddd60cdbbce7b85d7cd1f2660e406b4ea037e443ac47d058a2a00364831a13bbafde895d6a42e0648f1b352c226197b077d";
+    @Value("${jwt.secret}")
+    private String secret;
+
     private static final String BEARER_TYPE = "Bearer ";
 
     public static class Config {
@@ -94,7 +97,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
     private SecretKeySpec generateSecretKey() {
         return new SecretKeySpec(
-                SECRET.getBytes(StandardCharsets.UTF_8),
+                secret.getBytes(StandardCharsets.UTF_8),
                 Jwts.SIG.HS256.key().build().getAlgorithm()
         );
     }

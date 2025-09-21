@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @Configuration
 public class FilterConfig {
+    private static final String COOKIE_HEADER = "Cookie";
+    private static final String REPLACE_PATH = "/${segment}";
+    private static final String LOGGING_FILTER_BASE_MESSAGE = "Spring Cloud Gateway Logging Filter";
 
     private final AuthorizationHeaderFilter authorizationHeaderFilter;
     private final LoggingFilter loggingFilter;
@@ -28,9 +31,9 @@ public class FilterConfig {
                                         "/api/users/logout"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/user-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/user-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                 )
                                 .uri("lb://user-service")
                 )
@@ -40,9 +43,9 @@ public class FilterConfig {
                                         "/api/users/**"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/user-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/user-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                 )
                                 .uri("lb://user-service")
@@ -54,9 +57,9 @@ public class FilterConfig {
                                         "/api/reservations/**"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/reservation-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/reservation-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                 )
                                 .uri("lb://reservation-service")
                 )
@@ -66,9 +69,9 @@ public class FilterConfig {
                                         "/admin/reservations/**"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/reservation-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/reservation-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                 )
                                 .uri("lb://reservation-service")
@@ -80,9 +83,9 @@ public class FilterConfig {
                                         "/api/spots/**"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/spot-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                 )
                                 .uri("lb://spot-service")
                 )
@@ -92,9 +95,9 @@ public class FilterConfig {
                                         "/admin/spots/**"
                                 )
                                 .filters(f -> f
-                                        .removeRequestHeader("Cookie")
-                                        .rewritePath("/spot-service/(?<segment>.*)", "/${segment}")
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config("Spring Cloud Gateway Logging Filter", true, true)))
+                                        .removeRequestHeader(COOKIE_HEADER)
+                                        .rewritePath("/spot-service/(?<segment>.*)", REPLACE_PATH)
+                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
                                 )
                                 .uri("lb://spot-service")
