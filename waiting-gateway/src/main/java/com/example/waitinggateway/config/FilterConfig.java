@@ -34,6 +34,10 @@ public class FilterConfig {
                                         .removeRequestHeader(COOKIE_HEADER)
                                         .rewritePath("/user-service/(?<segment>.*)", REPLACE_PATH)
                                         .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
+                                        .circuitBreaker(config -> config
+                                                .setName("userCircuitBreaker")
+                                                .setFallbackUri("forward:/fallback/user-service")
+                                        )
                                 )
                                 .uri("lb://user-service")
                 )
@@ -47,6 +51,10 @@ public class FilterConfig {
                                         .rewritePath("/user-service/(?<segment>.*)", REPLACE_PATH)
                                         .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
+                                        .circuitBreaker(config -> config
+                                                .setName("userCircuitBreaker")
+                                                .setFallbackUri("forward:/fallback/user-service")
+                                        )
                                 )
                                 .uri("lb://user-service")
                 )
@@ -54,53 +62,37 @@ public class FilterConfig {
                 // reservation-service
                 .route("reservation-service",
                         r -> r.path(
-                                        "/api/reservations/**"
+                                        "/api/reservations/**",
+                                        "/api/spots/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader(COOKIE_HEADER)
                                         .rewritePath("/reservation-service/(?<segment>.*)", REPLACE_PATH)
                                         .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
+                                        .circuitBreaker(config -> config
+                                                .setName("reservationCircuitBreaker")
+                                                .setFallbackUri("forward:/fallback/reservation-service")
+                                        )
                                 )
                                 .uri("lb://reservation-service")
                 )
 
                 .route("reservation-service",
                         r -> r.path(
-                                        "/admin/reservations/**"
+                                        "/admin/reservations/**",
+                                        "/admin/spots/**"
                                 )
                                 .filters(f -> f
                                         .removeRequestHeader(COOKIE_HEADER)
                                         .rewritePath("/reservation-service/(?<segment>.*)", REPLACE_PATH)
                                         .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
                                         .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
+                                        .circuitBreaker(config -> config
+                                                .setName("reservationCircuitBreaker")
+                                                .setFallbackUri("forward:/fallback/reservation-service")
+                                        )
                                 )
                                 .uri("lb://reservation-service")
-                )
-
-                // spot-service
-                .route("spot-service",
-                        r -> r.path(
-                                        "/api/spots/**"
-                                )
-                                .filters(f -> f
-                                        .removeRequestHeader(COOKIE_HEADER)
-                                        .rewritePath("/spot-service/(?<segment>.*)", REPLACE_PATH)
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
-                                )
-                                .uri("lb://spot-service")
-                )
-
-                .route("spot-service",
-                        r -> r.path(
-                                        "/admin/spots/**"
-                                )
-                                .filters(f -> f
-                                        .removeRequestHeader(COOKIE_HEADER)
-                                        .rewritePath("/spot-service/(?<segment>.*)", REPLACE_PATH)
-                                        .filter(loggingFilter.apply(new LoggingFilter.Config(LOGGING_FILTER_BASE_MESSAGE, true, true)))
-                                        .filter(authorizationHeaderFilter.apply(new AuthorizationHeaderFilter.Config()))
-                                )
-                                .uri("lb://spot-service")
                 )
                 .build();
     }

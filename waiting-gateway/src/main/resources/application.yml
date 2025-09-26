@@ -20,3 +20,35 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  metrics:
+    enabled: true
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        allow-health-indicator-to-fail: false
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 7s
+        wait-duration-in-open-state: 10s
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state: 5
+        record-exceptions:
+          - java.util.concurrent.TimeoutException
+          - org.springframework.cloud.gateway.support.NotFoundException
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException
+    instances:
+      userCircuitBreaker:
+        baseConfig: default
+      reservationCircuitBreaker:
+        base-config: default
+    metrics:
+      enabled: true

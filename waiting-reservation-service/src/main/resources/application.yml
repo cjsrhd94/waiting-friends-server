@@ -45,7 +45,3 @@ management:
     web:
       exposure:
         include: "*"
-
-reservation:
-    server:
-      spot: http://localhost:9090
