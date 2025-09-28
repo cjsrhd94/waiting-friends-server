@@ -1,7 +1,7 @@
 package com.example.waitingreservationservice.service;
 
-import com.example.waitingredis.util.RedisUtil;
 import com.example.waitingredis.common.annotation.DistributedLock;
+import com.example.waitingredis.util.RedisUtil;
 import com.example.waitingreservationservice.common.exception.EnterNotAllowException;
 import com.example.waitingreservationservice.common.exception.InvalidReservationStatusException;
 import com.example.waitingreservationservice.common.util.CacheKey;
@@ -12,7 +12,6 @@ import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.ReservationRepository;
-
 import com.example.waitingreservationservice.repository.reader.ReservationReader;
 import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.RequiredArgsConstructor;

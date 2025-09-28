@@ -1,5 +1,6 @@
 package com.example.waitingreservationservice.service;
 
+import com.example.waitingredis.common.annotation.PERCache;
 import com.example.waitingreservationservice.dto.response.SpotResponse;
 import com.example.waitingreservationservice.entity.Spot;
 import com.example.waitingreservationservice.repository.SpotRepository;
@@ -42,6 +43,7 @@ public class SpotService {
         spotRepository.save(spot);
     }
 
+    @PERCache(key = "'spot:' + #spotId", ttl = 15)
     @Transactional(readOnly = true)
     public SpotResponse getSpot(Long spotId) {
         Spot spot = spotReader.findById(spotId);
