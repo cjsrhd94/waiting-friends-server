@@ -56,6 +56,10 @@ dependencies {
 
     //TSID
     implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.11.0'
+    implementation 'com.github.f4b6a3:tsid-creator:5.2.6'
+
+    // ULID
+    implementation 'com.github.f4b6a3:ulid-creator:5.2.3'
 
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
