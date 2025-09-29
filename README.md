@@ -35,6 +35,8 @@
   - [1000만건의 데이터를 커버링 인덱스를 사용하여 쿼리 최적화하기](https://cjsrhd94.tistory.com/223)
   - [Spring JDBC Batch Insert를 사용해 대용량 데이터 삽입시 성능 최적화](https://cjsrhd94.tistory.com/219)
   - [nGrinder 부하 테스트를 활용하여 Hikari CP 최적화하기](https://cjsrhd94.tistory.com/221)
+  - [Cache Stampede에 대응하는 캐시 갱신 전략 (PER 알고리즘)](https://cjsrhd94.tistory.com/226)
+  - [분산 환경에서 선호되는 기본키 생성 전략 (feat. TSID)](https://cjsrhd94.tistory.com/224)
 - 모니터링
   - [prometheus와 grafana를 사용해 서버 모니터링 환경 구축](https://cjsrhd94.tistory.com/216)
   - [loki와 grafana를 사용해 로그 모니터링 환경 구축](https://cjsrhd94.tistory.com/217)
