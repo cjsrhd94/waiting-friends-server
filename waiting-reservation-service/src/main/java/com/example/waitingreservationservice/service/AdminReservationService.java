@@ -9,7 +9,6 @@ import com.example.waitingreservationservice.dto.request.ReservationUpdateReques
 import com.example.waitingreservationservice.dto.response.ReservationResponse;
 import com.example.waitingreservationservice.entity.Reservation;
 import com.example.waitingreservationservice.repository.reader.ReservationReader;
-import com.example.waitingreservationservice.repository.reader.SpotReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminReservationService {
     private final ReservationReader reservationReader;
-    private final SpotReader spotReader;
 
     private final EventProducer eventProducer;
     private final RedisUtil redisUtil;

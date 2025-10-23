@@ -18,14 +18,14 @@ public class EventProducer {
     }
 
     public void sendReservationWaiting(ReservationWaitingNotificationEvent event) {
-        kafkaProducer.send("reservation.message", "reservation.waiting", event);
+        kafkaProducer.send("reservation.message", "reservation::" + event.getReservationId(), "reservation.waiting", event);
     }
 
     public void sendReservationCalling(ReservationCallingNotificationEvent event) {
-        kafkaProducer.send("reservation.message", "reservation.calling", event);
+        kafkaProducer.send("reservation.message", "reservation::" + event.getReservationId(), "reservation.calling", event);
     }
 
     public void sendReservationCanceled(ReservationCanceledNotificationEvent event) {
-        kafkaProducer.send("reservation.message", "reservation.canceled", event);
+        kafkaProducer.send("reservation.message", "reservation::" + event.getReservationId(), "reservation.canceled", event);
     }
 }

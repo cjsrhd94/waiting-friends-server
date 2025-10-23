@@ -27,6 +27,14 @@ public class KafkaProducer {
         );
     }
 
+    public void send(String topic, Object key, String type, Object payload) {
+        kafkaTemplate.send(
+                topic,
+                key.toString(),
+                jsonConverter.toJson(new Event(type, jsonConverter.toJson(payload)))
+        );
+    }
+
     public void send(String topic, Object payload) {
         kafkaTemplate.send(
                 topic,
